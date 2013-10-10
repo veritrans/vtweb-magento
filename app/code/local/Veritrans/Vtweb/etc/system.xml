@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<config>
+  <sections>
+    <payment>
+      <groups>
+        <vtweb translate="label comment" module="vtweb">
+          <label>Veritrans VT Web</label>
+          <frontend_type>text</frontend_type>
+          <sort_order>0</sort_order>
+          <show_in_default>1</show_in_default>
+          <show_in_website>1</show_in_website>
+          <show_in_store>1</show_in_store>
+          <fields>
+            <active translate="label">
+              <label>Enabled</label>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_yesno</source_model>
+              <sort_order>1</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+            </active>
+            <title translate="label">
+              <label>Title</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>2</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </title>
+            <order_status translate="label">
+              <label>New Order Status</label>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_order_status</source_model>
+              <sort_order>3</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+            </order_status>
+	    <merchant_id translate="label">
+		<label>Merchant ID</label>
+		<frontend_type>text</frontend_type>
+		<sort_order>4</sort_order>
+		<show_in_default>1</show_in_default>
+		<show_in_website>1</show_in_website>
+		<show_in_store>0</show_in_store>
+	    </merchant_id>
+	    <merchant_hash>
+		<label>Merchant Hash Key</label>
+		<frontend_type>text</frontend_type>
+		<sort_order>5</sort_order>
+		<show_in_default>1</show_in_default>
+		<show_in_website>1</show_in_website>
+		<show_in_store>0</show_in_store>
+	    </merchant_hash>
+	    <redirect_url>
+		<label>Redirect URL</label>
+		<frontend_type>text</frontend_type>
+		<sort_order>6</sort_order>
+		<show_in_default>1</show_in_default>
+		<show_in_website>1</show_in_website>
+		<show_in_store>0</show_in_store>
+	    </redirect_url>
+	    <redirect_message>
+		<label>Redirecting Message</label>
+		<frontend_type>textarea</frontend_type>
+		<sort_order>7</sort_order>
+		<show_in_default>1</show_in_default>
+		<show_in_website>1</show_in_website>
+		<show_in_store>0</show_in_store>
+	    </redirect_message>
+	    <form_message>
+		<label>Form Message</label>
+		<frontend_type>textarea</frontend_type>
+		<sort_order>8</sort_order>
+		<show_in_default>1</show_in_default>
+		<show_in_website>1</show_in_website>
+		<show_in_store>0</show_in_store>
+	    </form_message>
+	    <info_type>
+		<label>Show Veritrans logo as Info?</label>
+		<frontend_type>select</frontend_type>
+                <source_model>adminhtml/system_config_source_yesno</source_model>
+                <sort_order>9</sort_order>
+                <show_in_default>1</show_in_default>
+                <show_in_website>1</show_in_website>
+                <show_in_store>0</show_in_store>
+	    </info_type>
+            <allowspecific translate="label">
+              <label>Payment Applicable From</label>
+              <frontend_type>select</frontend_type>
+              <sort_order>10</sort_order>
+              <source_model>adminhtml/system_config_source_payment_allspecificcountries</source_model>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+            </allowspecific>
+            <specificcountry translate="label">
+              <label>Countries Payment Applicable From</label>
+              <frontend_type>multiselect</frontend_type>
+              <sort_order>11</sort_order>
+              <source_model>adminhtml/system_config_source_country</source_model>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+              <depends>
+                <allowspecific>1</allowspecific>
+              </depends>
+            </specificcountry>
+            <sort_order translate="label">
+              <label>Sort Order</label>
+              <frontend_type>text</frontend_type>
+	      <sort_order>12</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+            </sort_order>
+          </fields>
+        </vtweb>
+      </groups>
+    </payment>
+  </sections>
+</config>

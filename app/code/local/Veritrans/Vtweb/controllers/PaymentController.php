@@ -82,7 +82,7 @@ class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Actio
 		
 		$payment = $order->getPayment();
 		// for security comparation when getting notification, i use "additional_data" field in magento to save "token_merchant"
-		$payment->setTokenBrowser($keys['token_merchant'])->save(); 
+		$payment->setTokenMerchant($keys['token_merchant'])->save(); 
 		
 		$this->loadLayout();
 		$block = $this->getLayout()->createBlock('Mage_Core_Block_Template','vtweb',array('template' => 'vtweb/redirect.phtml'));
@@ -125,18 +125,15 @@ class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Actio
 			$order = Mage::getModel('sales/order');
 			$order->loadByIncrementId($orderId);
 			$payment = $order->getPayment();
-			$tokenBrowser = $payment->getTokenBrowser();
+			$tokenMerchant = $payment->getTokenMerchant();
 		
 			//security check is here, if success then compare the token_merchant that generated at "redirectAction" function
-			if( $_POST['mStatus'] == 'success' && $tokenBrowser == $_POST['TOKEN_MERCHANT']) { 
+			if( $_POST['mStatus'] == 'success' && $tokenMerchant == $_POST['TOKEN_MERCHANT']) { 
 				// Payment was successful, so update the order's state, send order email and move to the success page
 				$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, true, 'Gateway has successed the payment.');				
 				$order->sendOrderUpdateEmail(true, '<b>Payment Received Successfully!</b>');
 				$paymentDueDate = date("Y-m-d H:i:s");
 				$payment->setPaymentDueDate($paymentDueDate);
-				$payment->setNotificationBody(json_encode($_POST));
-				$order->setPaymentDueDate($paymentDueDate);
-				$order->setMethod($payment->getMethodInstance()->getTitle());
 				$order->save();
 			
 				Mage::getSingleton('checkout/session')->unsQuoteId();				

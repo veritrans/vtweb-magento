@@ -14,7 +14,9 @@ INSERT INTO eav_attribute( entity_type_id, attribute_code, attribute_model, back
 
 
 change app/code/core/Mage/Sales/Model/Entity/Setup.php
- 'order_payment' => array(
+
+
+		'order_payment' => array(
                 'entity_model'      => 'sales/order_payment',
                 'table'=>'sales/order_entity',
                 'attributes' => array(

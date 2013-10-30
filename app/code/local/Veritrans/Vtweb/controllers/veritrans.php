@@ -119,7 +119,7 @@ class Veritrans
   {    
     // Generate merchant hash code
     $hash = HashGenerator::generate($this->merchant_id, $this->merchant_hash_key, $this->settlement_type, $this->order_id, $this->gross_amount);
-  //  var_dump($hash);
+
 
     // populate parameters for the post request
     $data = array(
@@ -132,7 +132,7 @@ class Veritrans
       'CUSTOMER_STATUS'             => $this->customer_status,                
       'MERCHANTHASH'                => $hash,
       
-    'PROMO_ID'          => $this->promo_id,
+	  'PROMO_ID' 					=> $this->promo_id,
       'CUSTOMER_SPECIFICATION_FLAG' => $this->billing_address_different_with_shipping_address,   
       'EMAIL'                       => $this->email, 
       'FIRST_NAME'                  => $this->first_name,
@@ -170,7 +170,7 @@ class Veritrans
       $commodity_query_string = $this->build_commodity_query_string($this->commodity);
       $query_string = "$query_string&$commodity_query_string";
     }
-        
+    		
     $client = new Pest(self::REQUEST_KEY_URL);
     $result = $client->post('', $query_string);
 
@@ -184,19 +184,19 @@ class Veritrans
   private function build_commodity_query_string($commodity)
   {
     $line = 0;
-    $query_string = "";
-    foreach ($commodity as $row) {
+  	$query_string = "";
+  	foreach ($commodity as $row) {
         $row = $this->replace_commodity_params_with_legacy_params($row);
-        
+  	    
         $q = http_build_query($row);
         if(!($query_string=="")) 
           $query_string = $query_string . "&";
         $query_string = $query_string . $q;
         $line = $line + 1;
-    };
-    $query_string = $query_string . "&REPEAT_LINE=" . $line;
-  //  var_dump($query_string);
-    return $query_string;
+  	};
+  	$query_string = $query_string . "&REPEAT_LINE=" . $line;
+  	
+  	return $query_string;
   }
 
   // Private methods

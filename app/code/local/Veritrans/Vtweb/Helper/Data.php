@@ -15,11 +15,6 @@ class Veritrans_Vtweb_Helper_Data extends Mage_Core_Helper_Abstract
 		return Mage::getStoreConfig('payment/vtweb/title');
 	}
 	
-	// Veritrans payment page to be redirected 
-	function _getRedirectURL(){
-		return Mage::getStoreConfig('payment/vtweb/redirect_url');
-	}
-	
 	// Merchant ID given by Veritrans when registering via veritrans.co.id, you can get it from MAP (https://payments.veritrans.co.id/map/users/sign_in) 
 	function _getMerchantID(){
 		return Mage::getStoreConfig('payment/vtweb/merchant_id');
@@ -29,15 +24,20 @@ class Veritrans_Vtweb_Helper_Data extends Mage_Core_Helper_Abstract
 	function _getMerchantHashKey(){
 		return Mage::getStoreConfig('payment/vtweb/merchant_hash');
 	}
+
+	// Installment bank
+	function _getInstallmentBank(){
+		return Mage::getStoreConfig('payment/vtweb/installment_bank');
+	}
+
+	// Installment terms, separate by comma (,) ex. 3,6,12
+	function _getInstallmentTerms(){
+		return Mage::getStoreConfig('payment/vtweb/installment_terms');
+	}
 	
 	// progress side bar, if true then show logo image, vice versa
 	function _getInfoTypeIsImage(){
 		return Mage::getStoreConfig('payment/vtweb/info_type');
-	}
-	
-	// Message to be shown when redirecting to Veritrans
-	function _getRedirectMessage(){
-		return Mage::getStoreConfig('payment/vtweb/redirect_message');
 	}
 	
 	// Message to be shown when Veritrans payment method is chosen

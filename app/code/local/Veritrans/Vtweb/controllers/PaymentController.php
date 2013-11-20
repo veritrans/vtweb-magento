@@ -41,18 +41,22 @@ class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Actio
 		$veritrans->session_id = $sessionId->getSessionId();
 		// Gross amount must be total of commodities price
 		$veritrans->gross_amount = (int)$order->getBaseGrandTotal();
-		$veritrans->billing_address_different_with_shipping_address = 1;
-		$veritrans->required_shipping_address = 0;		
-		$veritrans->first_name = $order->getShippingAddress()->getFirstname();
-		$veritrans->last_name = $order->getShippingAddress()->getLastname();
-		$veritrans->address1 = $order->getShippingAddress()->getStreet(1);
-		$veritrans->address2 = $order->getShippingAddress()->getStreet(2);
-		$veritrans->city = $order->getShippingAddress()->getCity();
-		//$veritrans->country_code = $order->getShippingAddress()->getCountryId();
-		$veritrans->country_code = 'IDN'; // this is hard coded because magento and veritrans country code is not the same.
-		$veritrans->postal_code = $order->getShippingAddress()->getPostcode();
+		$veritrans->required_shipping_address = 1;	
+		$veritrans->billing_address_different_with_shipping_address = 0;	
+		$veritrans->shipping_first_name = $order->getShippingAddress()->getFirstname();
+		$veritrans->shipping_last_name = $order->getShippingAddress()->getLastname();
+		$veritrans->shipping_address1 = $order->getShippingAddress()->getStreet(1);
+		$veritrans->shipping_address2 = $order->getShippingAddress()->getStreet(2);
+		$veritrans->shipping_city = $order->getShippingAddress()->getCity();
+		$veritrans->shipping_country_code = 'IDN'; // this is hard coded because magento and veritrans country code is not the same.
+		$veritrans->shipping_postal_code = $order->getShippingAddress()->getPostcode();
+		$veritrans->shipping_phone = $order->getShippingAddress()->getTelephone();
 		$veritrans->email = $order->getShippingAddress()->getEmail();
-		$veritrans->phone = $order->getShippingAddress()->getTelephone();
+
+		$bank = Mage::helper('vtweb/data')->_getInstallmentBank();
+		$veritrans->installment_banks = array($bank);
+		$terms = explode(',', Mage::helper('vtweb/data')->_getInstallmentTerms());
+		$veritrans->installment_terms = json_encode(array($bank => $terms));
 	
 		$items = $order->getAllItems();		
 		$shipping_amount = (int)$order->getShippingAmount();
@@ -88,8 +92,7 @@ class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Actio
 		$block = $this->getLayout()->createBlock('Mage_Core_Block_Template','vtweb',array('template' => 'vtweb/redirect.phtml'));
 		$block->setData('token_browser', $keys['token_browser']);
 		$block->setData('merchant_id', $veritrans->merchant_id);
-		$block->setData('redirect_url', Mage::helper('vtweb/data')->_getRedirectURL());
-		$block->setData('redirect_message', Mage::helper('vtweb/data')->_getRedirectMessage());
+		$block->setData('redirect_url', Veritrans::PAYMENT_REDIRECT_URL);
 		$this->getLayout()->getBlock('content')->append($block);
 		$this->getResponse()->setBody($block->toHtml());
 		//$this->renderLayout(); 		

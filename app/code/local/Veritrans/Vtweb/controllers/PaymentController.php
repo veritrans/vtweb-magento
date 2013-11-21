@@ -65,21 +65,22 @@ class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Actio
 		foreach ($items as $itemId => $item){
 			array_push($commodities, array("COMMODITY_ID" => $item->getProductId(), "COMMODITY_PRICE" => (int)$item->getPrice(), 
 				"COMMODITY_QTY" => $item->getQtyToInvoice(), 
-				"COMMODITY_NAME1" => $item->getName(), "COMMODITY_NAME2" => $item->getName()));
+				"COMMODITY_NAME1" => substr($item->getName(), 0, 20), 
+				"COMMODITY_NAME2" => substr($item->getName(), 0, 20)));
                 }
 		
 		if($shipping_amount > 0){
 			array_push($commodities, array("COMMODITY_ID" => '1234', "COMMODITY_PRICE" => $shipping_amount, 
 				"COMMODITY_QTY" => 1, 
-				"COMMODITY_NAME1" => 'Shipping '. $order->getShippingDescription(), 
-				"COMMODITY_NAME2" => 'Shipping '. $order->getShippingDescription()));
+				"COMMODITY_NAME1" => substr('Shipping '. $order->getShippingDescription(), 0, 20), 
+				"COMMODITY_NAME2" => substr('Shipping '. $order->getShippingDescription(), 0, 20)));
 		}
 		
 		if($shipping_tax_amount > 0){
 			array_push($commodities, array("COMMODITY_ID" => '4321', "COMMODITY_PRICE" => $shipping_tax_amount, 
 				"COMMODITY_QTY" => 1, 
-				"COMMODITY_NAME1" => 'Shipping Tax Amount ', 
-				"COMMODITY_NAME2" => 'Shipping Tax Amount '));
+				"COMMODITY_NAME1" => 'Shipping Tax Amount', 
+				"COMMODITY_NAME2" => 'Shipping Tax Amount'));
 		}
 		$veritrans->commodity = $commodities;
 		$keys = $veritrans->get_keys();

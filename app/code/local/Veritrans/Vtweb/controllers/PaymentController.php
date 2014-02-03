@@ -43,6 +43,13 @@ class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Actio
 		$veritrans->gross_amount = (int)$order->getBaseGrandTotal();
 		$veritrans->required_shipping_address = 1;	
 		$veritrans->billing_address_different_with_shipping_address = 0;	
+		$veritrans->first_name = $order->getShippingAddress()->getFirstname();
+		$veritrans->last_name = $order->getShippingAddress()->getLastname();
+		$veritrans->address1 = $order->getShippingAddress()->getStreet(1);
+		$veritrans->address2 = $order->getShippingAddress()->getStreet(2);
+		$veritrans->city = $order->getShippingAddress()->getCity();
+		$veritrans->country_code = 'IDN'; // this is hard coded because magento and veritrans country code is not the same.
+		$veritrans->postal_code = $order->getShippingAddress()->getPostcode();
 		$veritrans->shipping_first_name = $order->getShippingAddress()->getFirstname();
 		$veritrans->shipping_last_name = $order->getShippingAddress()->getLastname();
 		$veritrans->shipping_address1 = $order->getShippingAddress()->getStreet(1);

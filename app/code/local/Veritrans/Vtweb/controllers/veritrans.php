@@ -180,9 +180,11 @@ class Veritrans
     }
     
     // Build Installment Terms
-    if(isset($this->installment_terms)){
-      $query_string = "$query_string&installment_terms=$this->installment_terms";
-    }
+	if (isset ($this->installment_terms)){
+		foreach ($this->installment_terms as $install){
+			$query_string = "$query_string&installment_terms[]=$install";
+		}
+	}
 
     // Build Promo Bins
     if(isset($this->promo_bins)){

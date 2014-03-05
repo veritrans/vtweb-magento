@@ -1,21 +1,20 @@
 Veritrans VT Web Extension.
 
-Copy the folders based on magento structure.
-I add some fields to record the needed informations, I do it by updating the table manually. I like to do this manually to avoid disturbing the running system.
-This is the script that need to be changed :
+1 - Copy the app and skin folders into magento root folders.
 
-ALTER TABLE sales_flat_order_payment ADD payment_due_date datetime DEFAULT NULL;
- 
-ALTER TABLE sales_flat_order_payment ADD token_merchant varchar(100) DEFAULT NULL;
- 
-insert into eav_attribute(entity_type_id,attribute_code,attribute_model,backend_model,backend_type,backend_table,frontend_model,frontend_input,frontend_label,frontend_class,source_model,is_required,is_user_defined,default_value,is_unique,note ) values(5, 'payment_due_date', null, 'eav/entity_attribute_backend_datetime', 'datetime', '', '', 'date', '',null, '',1,0,'',0,'');
- 
+2 - Run the following SQL commands on your shop magento database:
+
+ALTER TABLE sales_flat_order_payment ADD payment_due_date datetime DEFAULT NULL; 
+
+ALTER TABLE sales_flat_order_payment ADD token_merchant varchar(100) DEFAULT NULL; 
+
+INSERT INTO eav_attribute(entity_type_id,attribute_code,attribute_model,backend_model,backend_type,backend_table,frontend_model,frontend_input,frontend_label,frontend_class,source_model,is_required,is_user_defined,default_value,is_unique,note ) values(5, 'payment_due_date', null, 'eav/entity_attribute_backend_datetime', 'datetime', '', '', 'date', '',null, '',1,0,'',0,'');
+
 INSERT INTO eav_attribute( entity_type_id, attribute_code, attribute_model, backend_model, backend_type, backend_table, frontend_model, frontend_input, frontend_label, frontend_class, source_model, is_required, is_user_defined, default_value, is_unique, note ) VALUES ( 5, 'token_merchant', NULL , NULL , 'varchar', '', '', 'text', '', NULL , '', 1, 0, '', 0, '' );
 
+3 - Change app/code/core/Mage/Sales/Model/Entity/Setup.php
 
-change app/code/core/Mage/Sales/Model/Entity/Setup.php
-
-
+```
 		'order_payment' => array(
                 'entity_model'      => 'sales/order_payment',
                 'table'=>'sales/order_entity',
@@ -77,6 +76,9 @@ change app/code/core/Mage/Sales/Model/Entity/Setup.php
                     'base_shipping_captured' => array('type'=>'decimal'),
                     'base_shipping_refunded' => array('type'=>'decimal'),
 		    
-		    'payment_due_date' => array('type'=>'datetime'), // the time that Veritrans send us notification
-		    'token_merchant' => array('type'=>'varchar'), // save token_merchant to payment object
+					'payment_due_date' => array('type'=>'datetime'), // the time that Veritrans send us notification
+					'token_merchant' => array('type'=>'varchar'), // save token_merchant to payment object
                 ), 
+```			
+				
+4 - Change the Payment Notification URL in MAP to http://[yoursite.com]/vtweb/payment/notification 			

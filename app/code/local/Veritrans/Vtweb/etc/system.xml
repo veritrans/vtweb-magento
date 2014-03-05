@@ -53,22 +53,6 @@
 		<show_in_website>1</show_in_website>
 		<show_in_store>0</show_in_store>
 	    </merchant_hash>
-	    <redirect_url>
-		<label>Redirect URL</label>
-		<frontend_type>text</frontend_type>
-		<sort_order>6</sort_order>
-		<show_in_default>1</show_in_default>
-		<show_in_website>1</show_in_website>
-		<show_in_store>0</show_in_store>
-	    </redirect_url>
-	    <redirect_message>
-		<label>Redirecting Message</label>
-		<frontend_type>textarea</frontend_type>
-		<sort_order>7</sort_order>
-		<show_in_default>1</show_in_default>
-		<show_in_website>1</show_in_website>
-		<show_in_store>0</show_in_store>
-	    </redirect_message>
 	    <form_message>
 		<label>Form Message</label>
 		<frontend_type>textarea</frontend_type>
@@ -77,6 +61,22 @@
 		<show_in_website>1</show_in_website>
 		<show_in_store>0</show_in_store>
 	    </form_message>
+      <installment_bank>
+    <label>Installment Bank</label>
+    <frontend_type>text</frontend_type>
+    <sort_order>6</sort_order>
+    <show_in_default>1</show_in_default>
+    <show_in_website>1</show_in_website>
+    <show_in_store>0</show_in_store>
+      </installment_bank>
+      <installment_terms>
+    <label>Installment Terms</label>
+    <frontend_type>text</frontend_type>
+    <sort_order>7</sort_order>
+    <show_in_default>1</show_in_default>
+    <show_in_website>1</show_in_website>
+    <show_in_store>0</show_in_store>
+      </installment_terms>
 	    <info_type>
 		<label>Show Veritrans logo as Info?</label>
 		<frontend_type>select</frontend_type>

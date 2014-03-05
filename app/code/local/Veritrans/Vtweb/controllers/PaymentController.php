@@ -8,9 +8,10 @@
  * This class is used for handle redirection after placing order.
  * function redirectAction -> redirecting to Veritrans VT Web
  * function responseAction -> when payment at Veritrans VT Web is completed or failed, the page will be redirected to this function, 
- * you must set this url in your Veritrans MAP merchant account. http://yoursite.com/vtweb/payment/response
+ * you must set this url in your Veritrans MAP merchant account. http://yoursite.com/vtweb/payment/notification
  */
 require_once 'veritrans.php';
+require_once 'veritrans_notification.php';
 
 class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Action {
 
@@ -130,33 +131,32 @@ class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Actio
 	
 	// Veritrans will send notification of the payment status, this is only way we make sure that the payment is successed, if success send the item(s) to customer :p 
 	public function notificationAction() {
-		if($this->getRequest()->isPost()) { // Veritrans use POST method for notification
+
+		$notification = new VeritransNotification;
+
+		$orderId = $notification->orderId; // Sent by Veritrans gateway
+		$order = Mage::getModel('sales/order');
+		$order->loadByIncrementId($orderId);
+		$payment = $order->getPayment();
+		$tokenMerchant = $payment->getTokenMerchant();
+
+		if($notification->mStatus == 'success' && $tokenMerchant == $notification->TOKEN_MERCHANT) { 
+
+			//update status
+			$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, true, 'Gateway has successed the payment.');				
+			$order->sendOrderUpdateEmail(true, '<b>Payment Received Successfully!</b>');
+			$paymentDueDate = date("Y-m-d H:i:s");
+			$payment->setPaymentDueDate($paymentDueDate);
+			$order->save();
 			
-			$orderId = $_POST['orderId']; // Sent by Veritrans gateway
-			$order = Mage::getModel('sales/order');
-			$order->loadByIncrementId($orderId);
-			$payment = $order->getPayment();
-			$tokenMerchant = $payment->getTokenMerchant();
-		
-			//security check is here, if success then compare the token_merchant that generated at "redirectAction" function
-			if( $_POST['mStatus'] == 'success' && $tokenMerchant == $_POST['TOKEN_MERCHANT']) { 
-				// Payment was successful, so update the order's state, send order email and move to the success page
-				$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, true, 'Gateway has successed the payment.');				
-				$order->sendOrderUpdateEmail(true, '<b>Payment Received Successfully!</b>');
-				$paymentDueDate = date("Y-m-d H:i:s");
-				$payment->setPaymentDueDate($paymentDueDate);
-				$order->save();
-			
-				Mage::getSingleton('checkout/session')->unsQuoteId();				
-			}
-			else {
-				//when payment is failed, cancel the order. 
-				$order->cancel()->setState(Mage_Sales_Model_Order::STATE_CANCELED, true, 'Gateway has problem for the payment.');
-				$order->sendOrderUpdateEmail(true, '<b>Your Order Payment cannot be processed!</b>');
-				$order->cancel()->save();
-			
-				Mage::getSingleton('checkout/session')->unsQuoteId();				
-			} 
+			Mage::getSingleton('checkout/session')->unsQuoteId();	
+
+			return true;
+		}
+		else
+		{
+			//do nothing
+			return true;
 		}
 	}
 	

@@ -1,15 +1,18 @@
 Veritrans VT Web Extension.
 
-1. Copy the app and skin folders into magento root folders.
+1 - Copy the app and skin folders into magento root folders.
 
-2. Run the following SQL commands on your shop magento database:
+2 - Run the following SQL commands on your shop magento database:
 
 ALTER TABLE sales_flat_order_payment ADD payment_due_date datetime DEFAULT NULL; 
+
 ALTER TABLE sales_flat_order_payment ADD token_merchant varchar(100) DEFAULT NULL; 
+
 INSERT INTO eav_attribute(entity_type_id,attribute_code,attribute_model,backend_model,backend_type,backend_table,frontend_model,frontend_input,frontend_label,frontend_class,source_model,is_required,is_user_defined,default_value,is_unique,note ) values(5, 'payment_due_date', null, 'eav/entity_attribute_backend_datetime', 'datetime', '', '', 'date', '',null, '',1,0,'',0,'');
+
 INSERT INTO eav_attribute( entity_type_id, attribute_code, attribute_model, backend_model, backend_type, backend_table, frontend_model, frontend_input, frontend_label, frontend_class, source_model, is_required, is_user_defined, default_value, is_unique, note ) VALUES ( 5, 'token_merchant', NULL , NULL , 'varchar', '', '', 'text', '', NULL , '', 1, 0, '', 0, '' );
 
-3. Change app/code/core/Mage/Sales/Model/Entity/Setup.php
+3 - Change app/code/core/Mage/Sales/Model/Entity/Setup.php
 
 ```
 		'order_payment' => array(
@@ -78,4 +81,4 @@ INSERT INTO eav_attribute( entity_type_id, attribute_code, attribute_model, back
                 ), 
 ```			
 				
-4. Change the Payment Notification URL in MAP to http://[yoursite.com]/vtweb/payment/notification 			
+4 - Change the Payment Notification URL in MAP to http://[yoursite.com]/vtweb/payment/notification 			

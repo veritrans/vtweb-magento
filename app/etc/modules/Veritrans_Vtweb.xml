@@ -3,7 +3,10 @@
     <modules>
         <Veritrans_Vtweb>
             <active>true</active>
-            <codePool>local</codePool>
+            <codePool>community</codePool>
+            <dependes>
+            	<Mage_adminhtml />
+            </dependes>
         </Veritrans_Vtweb>
     </modules>
 </config>

@@ -21,12 +21,22 @@
         <class>Veritrans_Vtweb_Block</class>
       </vtweb>
     </blocks>
+    <adminhtml>
+      <layout>
+        <updates>
+          <vtweb>
+            <file>veritrans.xml</file>
+          </vtweb>
+        </updates>
+      </layout>
+    </adminhtml>
   </global>
   <default>
     <payment>
       <vtweb>
         <model>vtweb/standard</model>
         <active>1</active>
+        <api_version>2</api_version>
         <order_status>pending</order_status>
         <title>Veritrans VT Web</title>
         <payment_action>sale</payment_action>

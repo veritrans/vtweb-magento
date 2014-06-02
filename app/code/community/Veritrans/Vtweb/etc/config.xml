@@ -56,4 +56,13 @@
       </vtweb>
     </routers>
   </frontend>
+  <adminhtml>
+    <layout>
+      <updates>
+        <veritrans_vtweb>
+          <file>veritrans.xml</file>
+        </veritrans_vtweb>
+      </updates>
+    </layout>
+  </adminhtml>
 </config>

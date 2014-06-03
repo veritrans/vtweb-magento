@@ -4,23 +4,25 @@
  *
  * @category   Mage
  * @package    Mage_Veritrans_VtWeb_PaymentController
- * @author     Kisman Hong, plihplih.com
+ * @author     Kisman Hong (plihplih.com), Ismail Faruqi (@ifaruqi_jpn)
  * This class is used for handle redirection after placing order.
  * function redirectAction -> redirecting to Veritrans VT Web
  * function responseAction -> when payment at Veritrans VT Web is completed or failed, the page will be redirected to this function, 
  * you must set this url in your Veritrans MAP merchant account. http://yoursite.com/vtweb/payment/notification
  */
-require_once 'veritrans.php';
-require_once 'veritrans_notification.php';
+
+require_once(Mage::getBaseDir('lib') . '/veritrans-php/veritrans.php');
+require_once(Mage::getBaseDir('lib') . '/veritrans-php/lib/veritrans_notification.php');
 
 class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Action {
 
 	/**
-	     * @return Mage_Checkout_Model_Session
-	     */
+   * @return Mage_Checkout_Model_Session
+   */
 	protected function _getCheckout() {
 		return Mage::getSingleton('checkout/session');
 	}
+	
 	// The redirect action is triggered when someone places an order, redirecting to Veritrans payment page.
 	public function redirectAction() {
 		$orderIncrementId = $this->_getCheckout()->getLastRealOrderId();
@@ -28,83 +30,143 @@ class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Actio
 		$sessionId = Mage::getSingleton("core/session");
 		
 		/* send an order email when redirecting to payment page although payment has not been completed. */
-		$order->setState(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW, true, 'New Order, waiting for payment.');
+		$order->setState(Mage::getStoreConfig('payment/vtweb/'), true, 'New order, waiting for payment.');
 		$order->sendNewOrderEmail();
 		$order->setEmailSent(true); 
+
+		$api_version = Mage::getStoreConfig('payment/vtweb/api_version');
+		$payment_type = Mage::getStoreConfig('payment/vtweb/payment_types');
 		
 		$veritrans = new Veritrans;
+
+		// general settings
+		$veritrans->api_version = $api_version;
+		$veritrans->payment_type = ($payment_type == 'vtdirect' ? Veritrans::VT_DIRECT : Veritrans::VT_WEB);
+
+		// v1-specific
 		$veritrans->merchant_id = Mage::helper('vtweb/data')->_getMerchantID();
-		// Supposed to be merchant_hash_key, not merchant_hash
 		$veritrans->merchant_hash_key = Mage::helper('vtweb/data')->_getMerchantHashKey();
-		//var_dump(Mage::helper('vtweb/data')->_getMerchantHashKey());
-		$veritrans->settlement_type = '01';
+
+		// v2-specific
+		$veritrans->client_key = Mage::getStoreConfig('payment/vtweb/client_key_v2');
+		$veritrans->server_key = Mage::getStoreConfig('payment/vtweb/server_key_v2');
+
+		// $veritrans->settlement_type = '01'; // unused in the new stack
 		$veritrans->order_id = $orderIncrementId;
-		$veritrans->session_id = $sessionId->getSessionId();
+		// $veritrans->session_id = $sessionId->getSessionId(); // unused in the new stack
 		// Gross amount must be total of commodities price
-		$veritrans->gross_amount = (int)$order->getBaseGrandTotal();
+		// $veritrans->gross_amount = (int)$order->getBaseGrandTotal(); // no need to set the gross amount in the new library
+
 		$veritrans->required_shipping_address = 1;	
-		$veritrans->billing_address_different_with_shipping_address = 0;	
-		$veritrans->first_name = $order->getShippingAddress()->getFirstname();
-		$veritrans->last_name = $order->getShippingAddress()->getLastname();
-		$veritrans->address1 = $order->getShippingAddress()->getStreet(1);
-		$veritrans->address2 = $order->getShippingAddress()->getStreet(2);
-		$veritrans->city = $order->getShippingAddress()->getCity();
-		$veritrans->country_code = 'IDN'; // this is hard coded because magento and veritrans country code is not the same.
-		$veritrans->postal_code = $order->getShippingAddress()->getPostcode();
+		$veritrans->billing_address_different_with_shipping_address = 1;	
+
+		$veritrans->first_name = $order->getBillingAddress()->getFirstname();
+		$veritrans->last_name = $order->getBillingAddress()->getLastname();
+		$veritrans->email = $order->getBillingAddress()->getEmail();
+		$veritrans->address1 = $order->getBillingAddress()->getStreet(1);
+		$veritrans->address2 = $order->getBillingAddress()->getStreet(2);
+		$veritrans->city = $order->getBillingAddress()->getCity();
+		$veritrans->country_code = $order->getBillingAddress()->getCountry(); // this is hard coded because magento and veritrans country code is not the same.
+		$veritrans->postal_code = $order->getBillingAddress()->getPostcode();
+		$veritrans->phone = $order->getBillingAddress()->getTelephone();
+		
 		$veritrans->shipping_first_name = $order->getShippingAddress()->getFirstname();
 		$veritrans->shipping_last_name = $order->getShippingAddress()->getLastname();
 		$veritrans->shipping_address1 = $order->getShippingAddress()->getStreet(1);
 		$veritrans->shipping_address2 = $order->getShippingAddress()->getStreet(2);
 		$veritrans->shipping_city = $order->getShippingAddress()->getCity();
-		$veritrans->shipping_country_code = 'IDN'; // this is hard coded because magento and veritrans country code is not the same.
+		$veritrans->shipping_country_code = $order->getShippingAddress()->getCountry(); // this is hard coded because magento and veritrans country code is not the same.
 		$veritrans->shipping_postal_code = $order->getShippingAddress()->getPostcode();
 		$veritrans->shipping_phone = $order->getShippingAddress()->getTelephone();
-		$veritrans->email = $order->getShippingAddress()->getEmail();
-
-		$bank = Mage::helper('vtweb/data')->_getInstallmentBank();
-		$veritrans->installment_banks = array($bank);
-		$terms = explode(',', Mage::helper('vtweb/data')->_getInstallmentTerms());
-		$veritrans->installment_terms = json_encode(array($bank => $terms));
+		
+		// $bank = Mage::helper('vtweb/data')->_getInstallmentBank();
+		// $veritrans->installment_banks = array($bank);
+		// $terms = explode(',', Mage::helper('vtweb/data')->_getInstallmentTerms());
+		// $veritrans->installment_terms = json_encode(array($bank => $terms));
 	
 		$items = $order->getAllItems();		
 		$shipping_amount = (int)$order->getShippingAmount();
 		$shipping_tax_amount = (int) (int)$order->getShippingTaxAmount();
-		$commodities =  array ();		
-		foreach ($items as $itemId => $item){
-			array_push($commodities, array("COMMODITY_ID" => $item->getProductId(), "COMMODITY_PRICE" => (int)$item->getPrice(), 
-				"COMMODITY_QTY" => $item->getQtyToInvoice(), 
-				"COMMODITY_NAME1" => substr($item->getName(), 0, 20), 
-				"COMMODITY_NAME2" => substr($item->getName(), 0, 20)));
-                }
+		$commodities =  array();
 		
-		if($shipping_amount > 0){
-			array_push($commodities, array("COMMODITY_ID" => '1234', "COMMODITY_PRICE" => $shipping_amount, 
-				"COMMODITY_QTY" => 1, 
-				"COMMODITY_NAME1" => substr('Shipping '. $order->getShippingDescription(), 0, 20), 
-				"COMMODITY_NAME2" => substr('Shipping '. $order->getShippingDescription(), 0, 20)));
+		foreach ($items as $itemId => $item)
+		{
+			array_push($commodities, 
+				array(
+					"item_id" => $item->getProductId(), 
+					"price" => (int)$item->getPrice(), 
+					"quantity" => $item->getQtyToInvoice(), 
+					"item_name1" => $item->getName(), 
+					"item_name2" => $item->getName(),
+					));
+    }
+		
+		if($shipping_amount > 0)
+		{
+			array_push($commodities, 
+				array(
+					"item_id" => 'SHIPPING', 
+					"price" => $shipping_amount, 
+					"quantity" => 1, 
+					"item_name1" => 'Shipping Cost', 
+					"item_name2" => 'Shipping Cost',
+					));
 		}
 		
-		if($shipping_tax_amount > 0){
-			array_push($commodities, array("COMMODITY_ID" => '4321', "COMMODITY_PRICE" => $shipping_tax_amount, 
-				"COMMODITY_QTY" => 1, 
-				"COMMODITY_NAME1" => 'Shipping Tax Amount', 
-				"COMMODITY_NAME2" => 'Shipping Tax Amount'));
+		if($shipping_tax_amount > 0)
+		{
+			array_push($commodities, 
+				array(
+					"item_id" => 'SHIPPING_TAX', 
+					"price" => $shipping_tax_amount, 
+					"quantity" => 1, 
+					"item_name1" => 'Shipping Tax', 
+					"item_name2" => 'Shipping Tax',
+					));
 		}
-		$veritrans->commodity = $commodities;
-		$keys = $veritrans->get_keys();
+
+		$veritrans->items = $commodities;
+		$keys = $veritrans->getTokens();
+
+		if ($api_version == 2)
+		{
+			if ($payment_type == 'vtdirect')
+			{
+
+			} else
+			{
+				// vtweb
+				if ($keys && $keys['status_code'] == 201)
+				{
+					$this->_redirectUrl($keys['redirect_url']);
+				} else
+				{
+					var_dump($keys);
+					exit;
+				}
+			}
+		} else
+		{
+			if ($payment_type == 'vtdirect')
+			{
+
+			} else
+			{
+				$payment = $order->getPayment();
+				$payment->setTokenMerchant($keys['token_merchant'])->save();
+				
+				$this->loadLayout();
+				$block = $this->getLayout()->createBlock('Mage_Core_Block_Template','vtweb',array('template' => 'vtweb/redirect.phtml'));
+				$block->setData('token_browser', $keys['token_browser']);
+				$block->setData('merchant_id', $veritrans->merchant_id);
+				$block->setData('redirect_url', Veritrans::PAYMENT_REDIRECT_URL);
+				$this->getLayout()->getBlock('content')->append($block);
+				$this->getResponse()->setBody($block->toHtml());
+				//$this->renderLayout(); 				
+			}
+			
+		}		
 		
-		$payment = $order->getPayment();
-		// for security comparation when getting notification, i use "additional_data" field in magento to save "token_merchant"
-		$payment->setTokenMerchant($keys['token_merchant'])->save(); 
-		
-		$this->loadLayout();
-		$block = $this->getLayout()->createBlock('Mage_Core_Block_Template','vtweb',array('template' => 'vtweb/redirect.phtml'));
-		$block->setData('token_browser', $keys['token_browser']);
-		$block->setData('merchant_id', $veritrans->merchant_id);
-		$block->setData('redirect_url', Veritrans::PAYMENT_REDIRECT_URL);
-		$this->getLayout()->getBlock('content')->append($block);
-		$this->getResponse()->setBody($block->toHtml());
-		//$this->renderLayout(); 		
 	}
 	
 	// The response action is triggered when your gateway sends back a response after processing the customer's payment, we will not update to success because success is valid when notification (security reason)

@@ -15,7 +15,7 @@ class Veritrans_Vtweb_Model_Standard extends Mage_Payment_Model_Method_Abstract 
 	protected $_canUseForMultishipping  = false;
 	
 	protected $_formBlockType = 'vtweb/form';
-        protected $_infoBlockType = 'vtweb/info';
+  protected $_infoBlockType = 'vtweb/info';
 	
 	// call to redirectAction function at Veritrans_Vtweb_PaymentController
 	public function getOrderPlaceRedirectUrl() {

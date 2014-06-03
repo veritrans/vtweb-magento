@@ -194,32 +194,78 @@ class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Actio
 	// Veritrans will send notification of the payment status, this is only way we make sure that the payment is successed, if success send the item(s) to customer :p 
 	public function notificationAction() {
 
-		$notification = new VeritransNotification;
+		$notification = new VeritransNotification();
 
-		$orderId = $notification->orderId; // Sent by Veritrans gateway
-		$order = Mage::getModel('sales/order');
-		$order->loadByIncrementId($orderId);
-		$payment = $order->getPayment();
-		$tokenMerchant = $payment->getTokenMerchant();
-
-		if($notification->mStatus == 'success' && $tokenMerchant == $notification->TOKEN_MERCHANT) { 
-
-			//update status
-			$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, true, 'Gateway has successed the payment.');				
-			$order->sendOrderUpdateEmail(true, '<b>Payment Received Successfully!</b>');
-			$paymentDueDate = date("Y-m-d H:i:s");
-			$payment->setPaymentDueDate($paymentDueDate);
-			$order->save();
-			
-			Mage::getSingleton('checkout/session')->unsQuoteId();	
-
-			return true;
-		}
-		else
+		if (Mage::getStoreConfig('payment/vtweb/api_version') == 2)
 		{
-			//do nothing
-			return true;
+			$order_id = $notification->order_id;
+			$veritrans = new Veritrans();
+			$veritrans->server_key = Mage::getStoreConfig('payment/vtweb/server_key_v2');
+			$confirmation = $veritrans->confirm($order_id);
+			
+			if ($confirmation && $confirmation['status_code'] && $confirmation['status_code'] == 200)
+			{
+				$order = Mage::getModel('sales/order');
+				$order->loadByIncrementId($order_id);
+				if ($confirmation['transaction_status'] == 'capture')	
+				{
+					// create proper invoice
+					$invoice = $order->prepareInvoice()
+						->setTransactionId($order->getId())
+						->addComment('Payment successfully processed by Veritrans.')
+						->register()
+						->pay();
+
+					$transaction_save = Mage::getModel('core/resource_transaction')
+						->addObject($invoice)
+						->addObject($invoice->getOrder());
+
+					$transaction_save->save();
+
+					$order->setStatus('processing');
+					$order->sendOrderUpdateEmail(true, 'Thank you, your payment is successfully processed.');
+				} elseif ($confirmation['transaction_status'] == 'challenge')
+				{
+					$order->setStatus('fraud');
+				} elseif ($confirmation['transaction_status'] == 'deny')
+				{
+					$order->setStatus('canceled');
+				}
+				$order->save();
+			} else
+			{
+				echo 'Confirmation failed!';
+				var_dump($confirmation);
+			}
+
+		} else
+		{
+			$orderId = $notification->orderId; // Sent by Veritrans gateway
+			$order = Mage::getModel('sales/order');
+			$order->loadByIncrementId($orderId);
+			$payment = $order->getPayment();
+			$tokenMerchant = $payment->getTokenMerchant();
+
+			if($notification->mStatus == 'success' && $tokenMerchant == $notification->TOKEN_MERCHANT) { 
+
+				//update status
+				$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, true, 'Gateway has successed the payment.');				
+				$order->sendOrderUpdateEmail(true, '<b>Payment Received Successfully!</b>');
+				$paymentDueDate = date("Y-m-d H:i:s");
+				$payment->setPaymentDueDate($paymentDueDate);
+				$order->save();
+				
+				Mage::getSingleton('checkout/session')->unsQuoteId();	
+
+				return true;
+			}
+			else
+			{
+				//do nothing
+				return true;
+			}	
 		}
+		
 	}
 	
 	// The cancel action is triggered when an order is to be cancelled

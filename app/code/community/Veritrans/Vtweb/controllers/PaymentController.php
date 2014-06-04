@@ -125,6 +125,24 @@ class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Actio
 					));
 		}
 
+		// convert to IDR
+		$current_currency = Mage::app()->getStore()->getCurrentCurrencyCode();
+		if ($current_currency != 'IDR')
+		{
+			$idr_exist = in_array('IDR', Mage::app()->getStore()->getAvailableCurrencyCodes());
+			if ($idr_exist)
+			{
+				// attempt to use the built-in currency converter
+				$conversion_func = function($non_idr_price) use ($current_currency) { return Mage::helper('directory')->currencyConvert($non_idr_price, $current_currency, 'IDR'); };
+			} else
+			{
+				$conversion_func = function($non_idr_price) { return $non_idr_price * Mage::getStoreConfig('payment/vtweb/conversion_rate'); };
+			}
+			foreach ($commodities as &$item) {
+	      $item['price'] = intval(round(call_user_func($conversion_func, $item['price'])));
+	    }
+		}		
+
 		$veritrans->items = $commodities;
 		$keys = $veritrans->getTokens();
 

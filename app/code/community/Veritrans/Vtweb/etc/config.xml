@@ -42,6 +42,7 @@
         <payment_action>sale</payment_action>
         <allowspecific>0</allowspecific>
         <sort_order>1</sort_order>
+        <conversion_rate>10000</conversion_rate>
       </vtweb>
     </payment>
   </default>

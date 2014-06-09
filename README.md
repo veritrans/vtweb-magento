@@ -7,7 +7,7 @@ VTWebMagento
 
 2 - Locate the root Magento directory of your shop via FTP connection
 
-3 - Copy the 'app' and 'skin' folders into magento root folder
+3 - Copy the 'app', 'lib' and 'skin' folders into magento root folder
 
 4 - Run the following SQL commands on your shop's magento database:
 
@@ -89,6 +89,6 @@ INSERT INTO eav_attribute( entity_type_id, attribute_code, attribute_model, back
                 ), 
 ```			
 
-6 - In your Magento admin area, enable the Veritrans plug-in and insert your merchant details (Merchant ID and Merchant Hash Key)
+6 - In your Magento admin area, enable the Veritrans plug-in and insert your merchant details (Server key and client key)
 				
 7 - Login into your Veritrans account and change the Payment Notification URL in Settings to http://[your shop's homepage]/vtweb/payment/notification 

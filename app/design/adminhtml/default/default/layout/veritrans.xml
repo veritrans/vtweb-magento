@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<layout>
+	<default>
+		<reference name="head">
+			<action method="addItem">
+				<type>skin_js</type>
+				<script>js/veritrans_admin.js</script>
+			</action>
+		</reference>
+	</default>
+</layout>

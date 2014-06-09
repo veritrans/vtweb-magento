@@ -21,6 +21,15 @@
         <class>Veritrans_Vtweb_Block</class>
       </vtweb>
     </blocks>
+    <adminhtml>
+      <layout>
+        <updates>
+          <vtweb>
+            <file>veritrans.xml</file>
+          </vtweb>
+        </updates>
+      </layout>
+    </adminhtml>
   </global>
   <default>
     <payment>
@@ -32,6 +41,9 @@
         <payment_action>sale</payment_action>
         <allowspecific>0</allowspecific>
         <sort_order>1</sort_order>
+        <conversion_rate>10000</conversion_rate>
+        <enable_3d_secure>true</enable_3d_secure>
+        <environment>sandbox</environment>
       </vtweb>
     </payment>
   </default>
@@ -46,4 +58,13 @@
       </vtweb>
     </routers>
   </frontend>
+  <adminhtml>
+    <layout>
+      <updates>
+        <veritrans_vtweb>
+          <file>veritrans.xml</file>
+        </veritrans_vtweb>
+      </updates>
+    </layout>
+  </adminhtml>
 </config>

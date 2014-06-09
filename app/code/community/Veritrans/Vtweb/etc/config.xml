@@ -36,13 +36,13 @@
       <vtweb>
         <model>vtweb/standard</model>
         <active>1</active>
-        <api_version>2</api_version>
         <order_status>pending</order_status>
         <title>Veritrans VT Web</title>
         <payment_action>sale</payment_action>
         <allowspecific>0</allowspecific>
         <sort_order>1</sort_order>
         <conversion_rate>10000</conversion_rate>
+        <enable_3d_secure>true</enable_3d_secure>
       </vtweb>
     </payment>
   </default>

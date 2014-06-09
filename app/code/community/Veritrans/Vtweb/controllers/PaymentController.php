@@ -40,8 +40,9 @@ class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Actio
 		$veritrans = new Veritrans;
 
 		// general settings
-		$veritrans->api_version = $api_version;
-		$veritrans->payment_type = ($payment_type == 'vtdirect' ? Veritrans::VT_DIRECT : Veritrans::VT_WEB);
+		$veritrans->api_version = 2;
+		// $veritrans->payment_type = ($payment_type == 'vtdirect' ? Veritrans::VT_DIRECT : Veritrans::VT_WEB);
+		$veritrans->payment_type = Veritrans::VT_WEB;
 
 		// v1-specific
 		$veritrans->merchant_id = Mage::helper('vtweb/data')->_getMerchantID();
@@ -78,6 +79,7 @@ class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Actio
 		$veritrans->shipping_country_code = $order->getShippingAddress()->getCountry(); // this is hard coded because magento and veritrans country code is not the same.
 		$veritrans->shipping_postal_code = $order->getShippingAddress()->getPostcode();
 		$veritrans->shipping_phone = $order->getShippingAddress()->getTelephone();
+		$veritrans->enable_3d_secure = Mage::getStoreConfig('payment/vtweb/enable_3d_secure');
 		
 		// $bank = Mage::helper('vtweb/data')->_getInstallmentBank();
 		// $veritrans->installment_banks = array($bank);

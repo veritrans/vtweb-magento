@@ -5,8 +5,8 @@ document.observe('dom:loaded', function() {
     switch(str) {
       case 'v2_settings':
         return [
-          'payment_vtweb_client_key_v2',
-          'payment_vtweb_server_key_v2'
+          // 'payment_vtweb_client_key_v2',
+          // 'payment_vtweb_server_key_v2'
         ];
       case 'v2_vtweb_settings':
         return [];
@@ -16,8 +16,8 @@ document.observe('dom:loaded', function() {
         return [];
       case 'v1_vtweb_settings':
         return [
-          'payment_vtweb_merchant_id',
-          'payment_vtweb_merchant_hash'
+          // 'payment_vtweb_merchant_id',
+          // 'payment_vtweb_merchant_hash'
         ];
       case 'v1_vtdirect_settings':
         return [];
@@ -27,10 +27,10 @@ document.observe('dom:loaded', function() {
         return [];
       case 'sensitive':
         return [
-          'payment_vtweb_client_key_v2',
-          'payment_vtweb_server_key_v2',
-          'payment_vtweb_merchant_id',
-          'payment_vtweb_merchant_hash'
+          // 'payment_vtweb_client_key_v2',
+          // 'payment_vtweb_server_key_v2',
+          // 'payment_vtweb_merchant_id',
+          // 'payment_vtweb_merchant_hash'
         ];
     }
   }
@@ -67,16 +67,16 @@ document.observe('dom:loaded', function() {
   if ($("payment_vtweb_api_version"))
   {
     $("payment_vtweb_api_version").observe('change', function(e, data) {
-      sensitiveOptions();
+      // sensitiveOptions();
     });  
   }
   
   if ($("payment_vtweb_payment_types"))
   {
     $("payment_vtweb_payment_types").observe('change', function(e, data) {
-      sensitiveOptions();
+      // sensitiveOptions();
     });  
   }  
 
-  sensitiveOptions();
+  // sensitiveOptions();
 });

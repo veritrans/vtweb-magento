@@ -43,6 +43,7 @@ class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Actio
 		$veritrans->api_version = 2;
 		// $veritrans->payment_type = ($payment_type == 'vtdirect' ? Veritrans::VT_DIRECT : Veritrans::VT_WEB);
 		$veritrans->payment_type = Veritrans::VT_WEB;
+		$veritrans->environment = (Mage::getStoreConfig('payment/vtweb/environment') == 'production' ? Veritrans::ENVIRONMENT_PRODUCTION : Veritrans::ENVIRONMENT_DEVELOPMENT);
 
 		// v1-specific
 		$veritrans->merchant_id = Mage::helper('vtweb/data')->_getMerchantID();

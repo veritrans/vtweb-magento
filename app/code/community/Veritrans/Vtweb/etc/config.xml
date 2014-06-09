@@ -43,6 +43,7 @@
         <sort_order>1</sort_order>
         <conversion_rate>10000</conversion_rate>
         <enable_3d_secure>true</enable_3d_secure>
+        <environment>sandbox</environment>
       </vtweb>
     </payment>
   </default>

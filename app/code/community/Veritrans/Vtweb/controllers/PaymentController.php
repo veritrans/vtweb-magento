@@ -149,7 +149,7 @@ class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Actio
 		$veritrans->items = $commodities;
 		$keys = $veritrans->getTokens();
 
-		if ($api_version == 2)
+		if ($veritrans->api_version == 2)
 		{
 			if ($payment_type == 'vtdirect')
 			{

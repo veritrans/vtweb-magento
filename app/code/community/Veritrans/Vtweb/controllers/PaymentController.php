@@ -36,12 +36,6 @@ class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Actio
     $api_version = Mage::getStoreConfig('payment/vtweb/api_version');
     $payment_type = Mage::getStoreConfig('payment/vtweb/payment_types');
 
-    $veritrans = new Veritrans;
-
-    // general settings
-    $veritrans->api_version = 2;
-    $veritrans->payment_type = Veritrans::VT_WEB;
-
     Veritrans_Config::$isProduction =
         Mage::getStoreConfig('payment/vtweb/environment') == 'production'
         ? true : false;
@@ -53,7 +47,8 @@ class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Actio
     // $veritrans->server_key = Mage::getStoreConfig('payment/vtweb/server_key_v2');
 
     Veritrans_Config::$is3ds =
-        Mage::getStoreConfig('payment/vtweb/enable_3d_secure');
+        Mage::getStoreConfig('payment/vtweb/enable_3d_secure') == '1'
+        ? true : false;
 
     // TODO
     Veritrans_Config::$isSanitized = false;
@@ -64,9 +59,6 @@ class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Actio
     // $veritrans->order_id = $orderIncrementId;
     // $veritrans->gross_amount = (int)$order->getBaseGrandTotal(); // no need to set the gross amount in the new library
 
-    $veritrans->required_shipping_address = 1;
-    $veritrans->billing_address_different_with_shipping_address = 1;
-
     $order_billing_address = $order->getBillingAddress();
     $billing_address = array();
     $billing_address['first_name']   = $order_billing_address->getFirstname();
@@ -74,7 +66,7 @@ class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Actio
     $billing_address['address']      = $order_billing_address->getStreet(1);
     $billing_address['city']         = $order_billing_address->getCity();
     $billing_address['postal_code']  = $order_billing_address->getPostcode();
-    $billing_address['country_code'] = $order_billing_address->getCountry();
+    $billing_address['country_code'] = 'IDN';
     $billing_address['phone']        = $order_billing_address->getTelephone();
 
     // $veritrans->first_name = $order->getBillingAddress()->getFirstname();
@@ -95,7 +87,7 @@ class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Actio
     $shipping_address['city']         = $order_shipping_address->getCity();
     $shipping_address['postal_code']  = $order_shipping_address->getPostcode();
     $shipping_address['phone']        = $order_shipping_address->getTelephone();
-    $shipping_address['country_code'] = $order_shipping_address->getCountry();
+    $shipping_address['country_code'] = 'IDN';
 
     // $veritrans->shipping_first_name = $order->getShippingAddress()->getFirstname();
     // $veritrans->shipping_last_name = $order->getShippingAddress()->getLastname();
@@ -221,7 +213,7 @@ class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Actio
       // TODO enabled payments
 
       $redirUrl = Veritrans_VtWeb::getRedirectionUrl($payloads);
-      $this->_redirUrl($redirUrl);
+      $this->_redirectUrl($redirUrl);
     }
     catch (Exception $e) {
     }
@@ -304,7 +296,7 @@ class Veritrans_Vtweb_PaymentController extends Mage_Core_Controller_Front_Actio
       error_log('verified');
 
       $order = Mage::getModel('sales/order');
-      $order->loadByIncrementId($order_id);
+      $order->loadByIncrementId($notif->order_id);
 
       $transaction = $notif->transaction_status;
       $fraud = $notif->fraud_status;

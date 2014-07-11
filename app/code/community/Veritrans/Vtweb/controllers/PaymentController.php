@@ -54,8 +54,7 @@ class Veritrans_Vtweb_PaymentController
         Mage::getStoreConfig('payment/vtweb/enable_3d_secure') == '1'
         ? true : false;
 
-    // TODO
-    Veritrans_Config::$isSanitized = false;
+    Veritrans_Config::$isSanitized = (Mage::getStoreConfig('payment/vtweb/enable_sanitized') == '1')?true:false;
 
     $transaction_details = array();
     $transaction_details['order_id'] = $orderIncrementId;
@@ -151,14 +150,22 @@ class Veritrans_Vtweb_PaymentController
       }
     }
 
+    $list_enable_payments = array("credit_card");
+    
+    if (Mage::getStoreConfig('payment/vtweb/enable_cimbclick')){
+      $list_enable_payments[] = "cimb_clicks";
+    }
+    if (Mage::getStoreConfig('payment/vtweb/enable_mandiriclickpay') == '1'){
+      $list_enable_payments[] = "mandiri_clickpay";
+    }
+
     $payloads = array();
     $payloads['transaction_details'] = $transaction_details;
     $payloads['item_details']        = $item_details;
     $payloads['customer_details']    = $customer_details;
+    $payloads['vtweb']               = array('enabled_payments' => $list_enable_payments);
 
-    try {
-      // TODO enabled payments
-
+    try {      
       $redirUrl = Veritrans_VtWeb::getRedirectionUrl($payloads);
       $this->_redirectUrl($redirUrl);
     }

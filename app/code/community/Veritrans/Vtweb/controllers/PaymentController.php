@@ -31,7 +31,7 @@ class Veritrans_Vtweb_PaymentController
     $orderIncrementId = $this->_getCheckout()->getLastRealOrderId();
     $order = Mage::getModel('sales/order')
         ->loadByIncrementId($orderIncrementId);
-    $sessionId = Mage::getSingleton("core/session");
+    $sessionId = Mage::getSingleton('core/session');
 
     /* send an order email when redirecting to payment page although payment
        has not been completed. */
@@ -54,7 +54,9 @@ class Veritrans_Vtweb_PaymentController
         Mage::getStoreConfig('payment/vtweb/enable_3d_secure') == '1'
         ? true : false;
 
-    Veritrans_Config::$isSanitized = (Mage::getStoreConfig('payment/vtweb/enable_sanitized') == '1')?true:false;
+    Veritrans_Config::$isSanitized =
+        Mage::getStoreConfig('payment/vtweb/enable_sanitized') == '1'
+        ? true : false;
 
     $transaction_details = array();
     $transaction_details['order_id'] = $orderIncrementId;
@@ -150,22 +152,23 @@ class Veritrans_Vtweb_PaymentController
       }
     }
 
-    $list_enable_payments = array("credit_card");
-    
-    if (Mage::getStoreConfig('payment/vtweb/enable_cimbclick')){
-      $list_enable_payments[] = "cimb_clicks";
+    $list_enable_payments = array('credit_card');
+
+    if (Mage::getStoreConfig('payment/vtweb/enable_cimbclick') == '1') {
+      $list_enable_payments[] = 'cimb_clicks';
     }
-    if (Mage::getStoreConfig('payment/vtweb/enable_mandiriclickpay') == '1'){
-      $list_enable_payments[] = "mandiri_clickpay";
+    if (Mage::getStoreConfig('payment/vtweb/enable_mandiriclickpay') == '1') {
+      $list_enable_payments[] = 'mandiri_clickpay';
     }
 
     $payloads = array();
     $payloads['transaction_details'] = $transaction_details;
     $payloads['item_details']        = $item_details;
     $payloads['customer_details']    = $customer_details;
-    $payloads['vtweb']               = array('enabled_payments' => $list_enable_payments);
+    $payloads['vtweb']               = array('enabled_payments'
+                                             => $list_enable_payments);
 
-    try {      
+    try {
       $redirUrl = Veritrans_VtWeb::getRedirectionUrl($payloads);
       $this->_redirectUrl($redirUrl);
     }

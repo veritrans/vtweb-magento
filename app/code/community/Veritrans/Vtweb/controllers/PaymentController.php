@@ -102,12 +102,15 @@ class Veritrans_Vtweb_PaymentController
     foreach ($items as $each) {
       $item = array(
           'id'       => $each->getProductId(),
-          'price'    => (int) $each->getPrice(),
+          'price'    => $each->getPrice(),
           'quantity' => $each->getQtyToInvoice(),
           'name'     => $each->getName()
         );
+      if ($item['quantity'] == 0) continue;
+
       $item_details[] = $item;
     }
+    unset($each);
 
     if ($shipping_amount > 0) {
       $shipping_item = array(
@@ -140,6 +143,13 @@ class Veritrans_Vtweb_PaymentController
         $item['price'] =
             intval(round(call_user_func($conversion_func, $item['price'])));
       }
+      unset($item);
+    }
+    else {
+      foreach ($item_details as &$each) {
+        $each['price'] = (int) $each['price'];
+      }
+      unset($each);
     }
 
     $list_enable_payments = array('credit_card');

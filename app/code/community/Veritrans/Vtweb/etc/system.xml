@@ -145,7 +145,7 @@
               <comment>Please contact us if you wish to enable this feature in Production</comment>
             </enable_3d_secure>
             <enable_sanitized>
-              <label>Enable sanitized feature ?</label>
+              <label>Enable Sanitization feature?</label>
               <frontend_type>select</frontend_type>
               <source_model>adminhtml/system_config_source_yesno</source_model>
               <sort_order>17</sort_order>
@@ -154,7 +154,7 @@
               <show_in_store>1</show_in_store>
             </enable_sanitized>
              <enable_mandiriclickpay>
-              <label>Enable payment by mandiri click pay ?</label>
+              <label>Enable Payment by Mandiri ClickPay?</label>
               <frontend_type>select</frontend_type>
               <source_model>adminhtml/system_config_source_yesno</source_model>
               <sort_order>18</sort_order>
@@ -164,7 +164,7 @@
               <comment>Please contact us if you wish to enable this feature in Production</comment>
             </enable_mandiriclickpay>
              <enable_cimbclick>
-              <label>Enable payment by CIMB click ?</label>
+              <label>Enable Payment by CIMB Clicks?</label>
               <frontend_type>select</frontend_type>
               <source_model>adminhtml/system_config_source_yesno</source_model>
               <sort_order>19</sort_order>

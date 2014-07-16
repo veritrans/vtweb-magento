@@ -95,8 +95,9 @@ class Veritrans_Vtweb_PaymentController
         ->getTelephone();
 
     $items               = $order->getAllItems();
-    $shipping_amount     = (int) $order->getShippingAmount();
-    $shipping_tax_amount = (int) $order->getShippingTaxAmount();
+    $shipping_amount     = $order->getShippingAmount();
+    $shipping_tax_amount = $order->getShippingTaxAmount();
+    $tax_amount = $order->getTaxAmount();
 
     $item_details = array();
     foreach ($items as $each) {
@@ -131,7 +132,7 @@ class Veritrans_Vtweb_PaymentController
         );
       $item_details[] =$shipping_item;
     }
-
+    
     if ($shipping_tax_amount > 0) {
       $shipping_tax_item = array(
           'id' => 'SHIPPING_TAX',
@@ -140,6 +141,16 @@ class Veritrans_Vtweb_PaymentController
           'name' => 'Shipping Tax'
         );
       $item_details[] = $shipping_tax_item;
+    }
+
+    if ($tax_amount > 0) {
+      $tax_item = array(
+          'id' => 'TAX',
+          'price' => $tax_amount,
+          'quantity' => 1,
+          'name' => 'Tax'
+        );
+      $item_details[] = $tax_item;
     }
 
     // convert to IDR

@@ -112,6 +112,16 @@ class Veritrans_Vtweb_PaymentController
     }
     unset($each);
 
+    if ($order->getDiscountAmount() != 0) {
+      $couponItem = array(
+          'id' => 'DISCOUNT',
+          'price' => $order->getDiscountAmount(),
+          'quantity' => 1,
+          'name' => 'DISCOUNT'
+        );
+      $item_details[] = $couponItem;
+    }
+
     if ($shipping_amount > 0) {
       $shipping_item = array(
           'id' => 'SHIPPING',

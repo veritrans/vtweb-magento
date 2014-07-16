@@ -135,7 +135,7 @@
               <comment>Change to 'Production' once your store is going live</comment>
             </environment>
             <enable_3d_secure>
-              <label>Attempt to use 3D Secure?</label>
+              <label>Enable 3D Secure</label>
               <frontend_type>select</frontend_type>
               <source_model>adminhtml/system_config_source_yesno</source_model>
               <sort_order>16</sort_order>
@@ -145,7 +145,7 @@
               <comment>Please contact us if you wish to enable this feature in Production</comment>
             </enable_3d_secure>
             <enable_sanitized>
-              <label>Enable Sanitization feature?</label>
+              <label>Enable Sanitization</label>
               <frontend_type>select</frontend_type>
               <source_model>adminhtml/system_config_source_yesno</source_model>
               <sort_order>17</sort_order>
@@ -154,7 +154,7 @@
               <show_in_store>1</show_in_store>
             </enable_sanitized>
              <enable_mandiriclickpay>
-              <label>Enable Payment by Mandiri ClickPay?</label>
+              <label>Enable Mandiri ClickPay</label>
               <frontend_type>select</frontend_type>
               <source_model>adminhtml/system_config_source_yesno</source_model>
               <sort_order>18</sort_order>
@@ -164,7 +164,7 @@
               <comment>Please contact us if you wish to enable this feature in Production</comment>
             </enable_mandiriclickpay>
              <enable_cimbclick>
-              <label>Enable Payment by CIMB Clicks?</label>
+              <label>Enable CIMB Clicks</label>
               <frontend_type>select</frontend_type>
               <source_model>adminhtml/system_config_source_yesno</source_model>
               <sort_order>19</sort_order>

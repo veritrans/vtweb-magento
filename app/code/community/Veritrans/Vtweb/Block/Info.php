@@ -14,7 +14,7 @@ class Veritrans_Vtweb_Block_Info extends Mage_Payment_Block_Info
     {
         parent::_construct();
 	$this->setInfoMessage( Mage::helper('vtweb/data')->_getInfoTypeIsImage() == true ? 
-		'<img src="'. $this->getSkinUrl('images/logo_veritrans.gif'). '"/>' : '<b>'. Mage::helper('vtweb/data')->_getTitle() . '</b>');
+		'<img src="'. $this->getSkinUrl('images/Veritrans.png'). '"/>' : '<b>'. Mage::helper('vtweb/data')->_getTitle() . '</b>');
 	$this->setPaymentMethodTitle( Mage::helper('vtweb/data')->_getTitle() );
         $this->setTemplate('vtweb/info.phtml');
     }

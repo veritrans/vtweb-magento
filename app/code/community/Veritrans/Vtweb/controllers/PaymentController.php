@@ -114,7 +114,7 @@ class Veritrans_Vtweb_PaymentController
         );
       
       if ($item['quantity'] == 0) continue;
-      
+      // error_log(print_r($each->getProductOptions(), true));
       $item_details[] = $item;
     }
     
@@ -240,17 +240,17 @@ class Veritrans_Vtweb_PaymentController
         $productOptions = $items[0]->getProductOptions();
         
         if (array_key_exists('attributes_info', $productOptions)) {
-          foreach($productOptions['attributes_info'] as $attribute) {
+          foreach ($productOptions['attributes_info'] as $attribute) {
             if (in_array('Payment', $attribute)) {
               $installment_value = explode(' ', $attribute['value']);
-              
+
               if (strtolower($installment_value[0]) == 'installment') {
                 $installment_terms = array();
                 $installment_terms[strtolower($installment_value[1])] = array($installment_value[2]);
 
                 $payment_options = array(
                   'installment' => array(
-                    'required' => false,
+                    'required' => true,
                     'installment_terms' => $installment_terms
                   )
                 );
@@ -263,11 +263,43 @@ class Veritrans_Vtweb_PaymentController
           unset($attribute);
         }
       }
-    } 
+      else {
+        $isWarning = false;
+        
+        foreach ($items as $each) {
+          $productOptions = $each->getProductOptions();
 
+          if (array_key_exists('attributes_info', $productOptions)) {
+            foreach ($productOptions['attributes_info'] as $attribute) {
+              if (in_array('Payment', $attribute)) {
+                $installment_value = explode(' ', $attribute['value']);
+
+                if (strtolower($installment_value[0]) == 'installment') {
+                  $isWarning = true;
+                }
+              }
+            }
+          }
+        }
+
+        unset($each);
+      }
+    }
+
+    error_log(print_r($payloads, true));
+    
     try {
       $redirUrl = Veritrans_VtWeb::getRedirectionUrl($payloads);
-      $this->_redirectUrl($redirUrl);
+
+      if ($isWarning) {
+        $this->_getCheckout()->setMsg($redirUrl);        
+        $this->_redirectUrl(Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK) . 'vtweb/paymentwarning/warning');
+        // $this->_redirectUrl('http://localhost/magento/index.php/vtweb/index/');
+      }
+      else {
+        $this->_redirectUrl($redirUrl);
+      }
+      // $this->_redirectUrl('vtweb/index/index');
     }
     catch (Exception $e) {
       error_log($e->getMessage());

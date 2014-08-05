@@ -37,7 +37,7 @@
         <model>vtweb/standard</model>
         <active>1</active>
         <order_status>pending</order_status>
-        <title>Veritrans VT Web</title>
+        <title>Credit Card</title>
         <payment_action>sale</payment_action>
         <allowspecific>0</allowspecific>
         <sort_order>1</sort_order>

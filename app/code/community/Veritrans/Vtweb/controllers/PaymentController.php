@@ -42,6 +42,9 @@ class Veritrans_Vtweb_PaymentController
 
     $api_version = Mage::getStoreConfig('payment/vtweb/api_version');
     $payment_type = Mage::getStoreConfig('payment/vtweb/payment_types');
+    $enable_installment = Mage::getStoreConfig('payment/vtweb/enable_installment');
+    $is_enabled_bni = Mage::getStoreConfig('payment/vtweb/enable_installment_bni');
+    $is_enabled_mandiri = Mage::getStoreConfig('payment/vtweb/enable_installment_mandiri');
 
     Veritrans_Config::$isProduction =
         Mage::getStoreConfig('payment/vtweb/environment') == 'production'
@@ -49,7 +52,7 @@ class Veritrans_Vtweb_PaymentController
 
     Veritrans_Config::$serverKey =
         Mage::getStoreConfig('payment/vtweb/server_key_v2');
-
+    
     Veritrans_Config::$is3ds =
         Mage::getStoreConfig('payment/vtweb/enable_3d_secure') == '1'
         ? true : false;
@@ -100,6 +103,8 @@ class Veritrans_Vtweb_PaymentController
     $tax_amount = $order->getTaxAmount();
 
     $item_details = array();
+
+
     foreach ($items as $each) {
       $item = array(
           'id'       => $each->getProductId(),
@@ -107,10 +112,14 @@ class Veritrans_Vtweb_PaymentController
           'quantity' => $each->getQtyToInvoice(),
           'name'     => $each->getName()
         );
+      
       if ($item['quantity'] == 0) continue;
-
+      // error_log(print_r($each->getProductOptions(), true));
       $item_details[] = $item;
     }
+    
+    $num_products = count($item_details);
+
     unset($each);
 
     if ($order->getDiscountAmount() != 0) {
@@ -189,11 +198,111 @@ class Veritrans_Vtweb_PaymentController
     $payloads['vtweb']               = array('enabled_payments'
                                              => $list_enable_payments);
 
+    $isWarning = false;
+
+    if ($enable_installment == 'allProducts') {
+      $installment_terms = array();
+      $isInstallment = false;
+      
+      if ($is_enabled_bni == 1) {
+        $bni_term = Mage::getStoreConfig('payment/vtweb/installment_bni_term');
+        $bni_term_array = explode(',', $bni_term);
+        
+        if (strlen($bni_term) != 0) {
+          $isInstallment = true;
+          $installment_terms['bni'] = $bni_term_array;
+        }
+      }
+
+      if ($is_enabled_mandiri == 1) {
+        $mandiri_term = Mage::getStoreConfig('payment/vtweb/installment_mandiri_term');
+        $mandiri_term_array = explode(',', $mandiri_term);
+        
+        if (strlen($mandiri_term) != 0) {
+          $isInstallment = true;
+          $installment_terms['mandiri'] = $mandiri_term_array;
+        }
+      }
+
+      $payment_options = array(
+        'installment' => array(
+          'required' => false,
+          'installment_terms' => $installment_terms
+        )
+      );
+
+      if ($isInstallment) {
+        $payloads['vtweb']['payment_options'] = $payment_options;
+      }
+    }
+    else if ($enable_installment == 'certainProducts') {
+      if ($num_products == 1) {
+        $productOptions = $items[0]->getProductOptions();
+        
+        if (array_key_exists('attributes_info', $productOptions)) {
+          foreach ($productOptions['attributes_info'] as $attribute) {
+            if (in_array('Payment', $attribute)) {
+              $installment_value = explode(' ', $attribute['value']);
+
+              if (strtolower($installment_value[0]) == 'installment') {
+                $installment_terms = array();
+                $installment_terms[strtolower($installment_value[1])] = array($installment_value[2]);
+
+                $payment_options = array(
+                  'installment' => array(
+                    'required' => true,
+                    'installment_terms' => $installment_terms
+                  )
+                );
+
+                $payloads['vtweb']['payment_options'] = $payment_options;
+              }
+            }
+          }
+
+          unset($attribute);
+        }
+      }
+      else {
+        $isWarning = false;
+        
+        foreach ($items as $each) {
+          $productOptions = $each->getProductOptions();
+
+          if (array_key_exists('attributes_info', $productOptions)) {
+            foreach ($productOptions['attributes_info'] as $attribute) {
+              if (in_array('Payment', $attribute)) {
+                $installment_value = explode(' ', $attribute['value']);
+
+                if (strtolower($installment_value[0]) == 'installment') {
+                  $isWarning = true;
+                }
+              }
+            }
+          }
+        }
+
+        unset($each);
+      }
+    }
+
+    error_log(print_r($payloads, true));
+    
     try {
       $redirUrl = Veritrans_VtWeb::getRedirectionUrl($payloads);
-      $this->_redirectUrl($redirUrl);
+
+      if ($isWarning) {
+        $this->_getCheckout()->setMsg($redirUrl);        
+        $this->_redirectUrl(Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK) . 'vtweb/paymentwarning/warning');
+        // $this->_redirectUrl('http://localhost/magento/index.php/vtweb/index/');
+      }
+      else {
+        $this->_redirectUrl($redirUrl);
+      }
+      // $this->_redirectUrl('vtweb/index/index');
     }
     catch (Exception $e) {
+      error_log($e->getMessage());
     }
   }
 

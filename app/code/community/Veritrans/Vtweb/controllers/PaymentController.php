@@ -199,6 +199,12 @@ class Veritrans_Vtweb_PaymentController
                                              => $list_enable_payments);
 
     $isWarning = false;
+    
+    $totalPrice = 0;
+
+    foreach ($item_details as $item) {
+      $totalPrice += $item['price'] * $item['quantity'];
+    }
 
     if ($enable_installment == 'allProducts') {
       $installment_terms = array();
@@ -231,7 +237,7 @@ class Veritrans_Vtweb_PaymentController
         )
       );
 
-      if ($isInstallment) {
+      if ($isInstallment && ($totalPrice >= 500000)) {
         $payloads['vtweb']['payment_options'] = $payment_options;
       }
     }
@@ -255,7 +261,9 @@ class Veritrans_Vtweb_PaymentController
                   )
                 );
 
-                $payloads['vtweb']['payment_options'] = $payment_options;
+                if ($totalPrice >= 500000) {
+                  $payloads['vtweb']['payment_options'] = $payment_options;
+                }
               }
             }
           }
@@ -264,8 +272,6 @@ class Veritrans_Vtweb_PaymentController
         }
       }
       else {
-        $isWarning = false;
-        
         foreach ($items as $each) {
           $productOptions = $each->getProductOptions();
 
@@ -286,20 +292,20 @@ class Veritrans_Vtweb_PaymentController
       }
     }
 
-    error_log(print_r($payloads, true));
-    
     try {
       $redirUrl = Veritrans_VtWeb::getRedirectionUrl($payloads);
-
+      
       if ($isWarning) {
         $this->_getCheckout()->setMsg($redirUrl);        
-        $this->_redirectUrl(Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK) . 'vtweb/paymentwarning/warning');
-        // $this->_redirectUrl('http://localhost/magento/index.php/vtweb/index/');
+        $this->_redirectUrl(Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK) . 'vtweb/paymentwarning/warning/message/1');
+      }
+      else if ($totalPrice < 500000) {
+        $this->_getCheckout()->setMsg($redirUrl);        
+        $this->_redirectUrl(Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK) . 'vtweb/paymentwarning/warning/message/2');
       }
       else {
         $this->_redirectUrl($redirUrl);
       }
-      // $this->_redirectUrl('vtweb/index/index');
     }
     catch (Exception $e) {
       error_log($e->getMessage());

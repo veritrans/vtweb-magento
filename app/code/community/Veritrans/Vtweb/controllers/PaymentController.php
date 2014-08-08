@@ -199,6 +199,7 @@ class Veritrans_Vtweb_PaymentController
                                              => $list_enable_payments);
 
     $isWarning = false;
+    $isInstallment = false;
     
     $totalPrice = 0;
 
@@ -208,7 +209,6 @@ class Veritrans_Vtweb_PaymentController
 
     if ($enable_installment == 'allProducts') {
       $installment_terms = array();
-      $isInstallment = false;
       
       if ($is_enabled_bni == 1) {
         $bni_term = Mage::getStoreConfig('payment/vtweb/installment_bni_term');
@@ -261,6 +261,8 @@ class Veritrans_Vtweb_PaymentController
                   )
                 );
 
+                $isInstallment = true;
+
                 if ($totalPrice >= 500000) {
                   $payloads['vtweb']['payment_options'] = $payment_options;
                 }
@@ -299,7 +301,7 @@ class Veritrans_Vtweb_PaymentController
         $this->_getCheckout()->setMsg($redirUrl);        
         $this->_redirectUrl(Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK) . 'vtweb/paymentwarning/warning/message/1');
       }
-      else if ($totalPrice < 500000) {
+      else if (($totalPrice < 500000) && ($isInstallment)) {
         $this->_getCheckout()->setMsg($redirUrl);        
         $this->_redirectUrl(Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK) . 'vtweb/paymentwarning/warning/message/2');
       }
@@ -357,6 +359,7 @@ class Veritrans_Vtweb_PaymentController
       $transaction = $notif->transaction_status;
       $fraud = $notif->fraud_status;
 
+      error_log('cuy transaction : ' . $transaction . ' fraud : ' . $fraud);
       $logs = '';
 
       if ($transaction == 'capture') {

@@ -32,9 +32,9 @@ class Veritrans_Vtweb_Model_System_Config_Source_Installment_Options
     public function toOptionArray()
     {
         return array(
+            array('value' => 'off', 'label' => Mage::helper('vtweb')->__('Off')),
             array('value' => 'allProducts', 'label' => Mage::helper('vtweb')->__('All Products')),
             array('value' => 'certainProducts', 'label' => Mage::helper('vtweb')->__('Certain Products')),
-            array('value' => 'off', 'label' => Mage::helper('vtweb')->__('Off')),
             );
     }
 }

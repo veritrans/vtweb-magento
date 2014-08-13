@@ -96,7 +96,7 @@
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>
-                  <comment>Please contact us if you wish to enable this feature in Production</comment>
+                  <comment>You must enable 3D Secure. Please contact us if you wish to disable this feature in the Production environment.</comment>
                 </enable_3d_secure>
                 <enable_sanitized>
                   <label>Enable Sanitization</label>

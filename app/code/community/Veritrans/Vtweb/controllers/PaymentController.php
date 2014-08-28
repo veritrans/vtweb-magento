@@ -350,67 +350,62 @@ class Veritrans_Vtweb_PaymentController
         Mage::getStoreConfig('payment/vtweb/server_key_v2');
     $notif = new Veritrans_Notification();
 
-    if ($notif->isVerified()) {
-      error_log('verified');
+    $order = Mage::getModel('sales/order');
+    $order->loadByIncrementId($notif->order_id);
 
-      $order = Mage::getModel('sales/order');
-      $order->loadByIncrementId($notif->order_id);
+    $transaction = $notif->transaction_status;
+    $fraud = $notif->fraud_status;
 
-      $transaction = $notif->transaction_status;
-      $fraud = $notif->fraud_status;
+    $logs = '';
 
-      error_log('cuy transaction : ' . $transaction . ' fraud : ' . $fraud);
-      $logs = '';
-
-      if ($transaction == 'capture') {
-        $logs .= 'capture ';
-        if ($fraud == 'challenge') {
-          $logs .= 'challenge ';
-          $order->setStatus('fraud');
-        }
-        else if ($fraud == 'accept') {
-          $logs .= 'accept ';
-          $invoice = $order->prepareInvoice()
-            ->setTransactionId($order->getId())
-            ->addComment('Payment successfully processed by Veritrans.')
-            ->register()
-            ->pay();
-
-          $transaction_save = Mage::getModel('core/resource_transaction')
-            ->addObject($invoice)
-            ->addObject($invoice->getOrder());
-
-          $transaction_save->save();
-
-          $order->setStatus('processing');
-          $order->sendOrderUpdateEmail(true,
-              'Thank you, your payment is successfully processed.');
-        }
-      }
-      else if ($transaction == 'cancel') {
-        $logs .= 'cancel ';
-        if ($fraud == 'challenge') {
-          $logs .= 'challenge ';
-          $order->setStatus('canceled');
-        }
-        else if ($fraud == 'accept') {
-          $logs .= 'accept ';
-          $order->setStatus('canceled');
-        }
-      }
-      else if ($transaction == 'deny') {
-        $logs .= 'deny ';
-        $order->setStatus('canceled');
-      }
-      else {
-        $logs .= "*$transaction:$fraud ";
+    if ($transaction == 'capture') {
+      $logs .= 'capture ';
+      if ($fraud == 'challenge') {
+        $logs .= 'challenge ';
         $order->setStatus('fraud');
       }
+      else if ($fraud == 'accept') {
+        $logs .= 'accept ';
+        $invoice = $order->prepareInvoice()
+          ->setTransactionId($order->getId())
+          ->addComment('Payment successfully processed by Veritrans.')
+          ->register()
+          ->pay();
 
-      $order->save();
+        $transaction_save = Mage::getModel('core/resource_transaction')
+          ->addObject($invoice)
+          ->addObject($invoice->getOrder());
 
-      error_log($logs);
+        $transaction_save->save();
+
+        $order->setStatus('processing');
+        $order->sendOrderUpdateEmail(true,
+            'Thank you, your payment is successfully processed.');
+      }
     }
+    else if ($transaction == 'cancel') {
+      $logs .= 'cancel ';
+      if ($fraud == 'challenge') {
+        $logs .= 'challenge ';
+        $order->setStatus('canceled');
+      }
+      else if ($fraud == 'accept') {
+        $logs .= 'accept ';
+        $order->setStatus('canceled');
+      }
+    }
+    else if ($transaction == 'deny') {
+      $logs .= 'deny ';
+      $order->setStatus('canceled');
+    }
+    else {
+      $logs .= "*$transaction:$fraud ";
+      $order->setStatus('fraud');
+    }
+
+    $order->save();
+
+    error_log($logs);
   }
 
   // The cancel action is triggered when an order is to be cancelled

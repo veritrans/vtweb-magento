@@ -193,6 +193,27 @@
                 </enable_cimbclick>
               </fields>
             </vtweb_internet_banking>
+			<vtweb_bank_transfer type="group" translate="label">
+              <label>Bank Transfer</label>
+              <frontend_type>text</frontend_type>              
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+              <sort_order>1</sort_order>
+              <fields>
+                <enable_permata_va>
+                  <label>Enable Permata VA</label>
+                  <config_path>payment/vtweb/enable_permatava</config_path>
+                  <frontend_type>select</frontend_type>
+                  <source_model>adminhtml/system_config_source_yesno</source_model>
+                  <sort_order>14</sort_order>
+                  <show_in_default>1</show_in_default>
+                  <show_in_website>1</show_in_website>
+                  <show_in_store>1</show_in_store>
+                  <comment>Please contact us if you wish to enable this feature in Production</comment>
+                </enable_permata_va>
+              </fields>
+            </vtweb_bank_transfer>
             <vtweb_installment type="group" translate="label">
               <label>Installment</label>
               <frontend_type>text</frontend_type>              
@@ -206,7 +227,7 @@
                   <config_path>payment/vtweb/enable_installment</config_path>
                   <frontend_type>select</frontend_type>
                   <source_model>vtweb/system_config_source_installment_options</source_model>
-                  <sort_order>14</sort_order>
+                  <sort_order>15</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>
@@ -267,7 +288,7 @@
                   <config_path>payment/vtweb/enable_installment_bni</config_path>
                   <frontend_type>select</frontend_type>
                   <source_model>adminhtml/system_config_source_yesno</source_model>
-                  <sort_order>15</sort_order>
+                  <sort_order>16</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>
@@ -306,7 +327,7 @@
                   <config_path>payment/vtweb/installment_bni_term</config_path>
                   <frontend_type>multiselect</frontend_type>
                   <source_model>vtweb/system_config_source_installment_bni_bnioptions</source_model>
-                  <sort_order>16</sort_order>
+                  <sort_order>17</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>
@@ -335,7 +356,7 @@
                   <config_path>payment/vtweb/enable_installment_mandiri</config_path>
                   <frontend_type>select</frontend_type>
                   <source_model>adminhtml/system_config_source_yesno</source_model>
-                  <sort_order>17</sort_order>
+                  <sort_order>18</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>
@@ -374,7 +395,7 @@
                   <config_path>payment/vtweb/installment_mandiri_term</config_path>
                   <frontend_type>multiselect</frontend_type>
                   <source_model>vtweb/system_config_source_installment_mandiri_mandirioptions</source_model>
-                  <sort_order>18</sort_order>
+                  <sort_order>19</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>

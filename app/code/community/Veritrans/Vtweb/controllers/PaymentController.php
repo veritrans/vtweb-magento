@@ -190,6 +190,9 @@ class Veritrans_Vtweb_PaymentController
     if (Mage::getStoreConfig('payment/vtweb/enable_mandiriclickpay') == '1') {
       $list_enable_payments[] = 'mandiri_clickpay';
     }
+    if (Mage::getStoreConfig('payment/vtweb/enable_permatava') == '1') {
+      $list_enable_payments[] = 'bank_transfer';
+    }
 
     $payloads = array();
     $payloads['transaction_details'] = $transaction_details;
@@ -397,6 +400,18 @@ class Veritrans_Vtweb_PaymentController
     else if ($transaction == 'deny') {
       $logs .= 'deny ';
       $order->setStatus('canceled');
+    }   
+	else if ($transaction == 'settlement') {
+     $logs .= 'settlement ';
+     $order->setStatus('processing');
+     $order->sendOrderUpdateEmail(true,
+            'Thank you, your payment is successfully processed.');
+    }
+	else if ($transaction == 'pending') {
+     $logs .= 'pending ';
+     $order->setStatus('Pending Payment');
+     $order->sendOrderUpdateEmail(true,
+            'Thank you, your payment is successfully processed.');
     }
     else {
       $logs .= "*$transaction:$fraud ";

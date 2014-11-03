@@ -1,4 +1,4 @@
-E<?php
+<?php
 /**
  * Magento
  *

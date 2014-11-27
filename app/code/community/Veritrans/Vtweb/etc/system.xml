@@ -6,7 +6,7 @@
         <vtweb translate="label comment" module="vtweb">
           <label>Veritrans</label>
           <frontend_type>text</frontend_type>
-          <sort_order>2</sort_order>
+          <sort_order>1</sort_order>
           <show_in_default>1</show_in_default>
           <show_in_website>1</show_in_website>
           <show_in_store>1</show_in_store>
@@ -33,7 +33,7 @@
                   <label>Title</label>
                   <config_path>payment/vtweb/title</config_path>
                   <frontend_type>text</frontend_type>
-                  <sort_order>4</sort_order>
+                  <sort_order>2</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>
@@ -43,7 +43,7 @@
                   <config_path>payment/vtweb/order_status</config_path>
                   <frontend_type>select</frontend_type>
                   <source_model>adminhtml/system_config_source_order_status</source_model>
-                  <sort_order>5</sort_order>
+                  <sort_order>3</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>0</show_in_store>
@@ -52,7 +52,7 @@
                   <label>Conversion Rate</label>
                   <config_path>payment/vtweb/conversion_rate</config_path>
                   <frontend_type>text</frontend_type>
-                  <sort_order>6</sort_order>
+                  <sort_order>4</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>
@@ -62,7 +62,7 @@
                   <label>Client Key</label>                  
                   <config_path>payment/vtweb/client_key_v2</config_path>
                   <frontend_type>text</frontend_type>
-                  <sort_order>7</sort_order>
+                  <sort_order>5</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>
@@ -71,7 +71,7 @@
                   <label>Server Key</label>
                   <config_path>payment/vtweb/server_key_v2</config_path>
                   <frontend_type>text</frontend_type>
-                  <sort_order>8</sort_order>
+                  <sort_order>6</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>
@@ -81,7 +81,7 @@
                   <config_path>payment/vtweb/environment</config_path>
                   <frontend_type>select</frontend_type>
                   <source_model>vtweb/system_config_source_api_environment</source_model>
-                  <sort_order>9</sort_order>
+                  <sort_order>7</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>
@@ -92,7 +92,7 @@
                   <config_path>payment/vtweb/enable_3d_secure</config_path>
                   <frontend_type>select</frontend_type>
                   <source_model>adminhtml/system_config_source_yesno</source_model>
-                  <sort_order>10</sort_order>
+                  <sort_order>8</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>
@@ -103,7 +103,7 @@
                   <config_path>payment/vtweb/enable_sanitized</config_path>
                   <frontend_type>select</frontend_type>
                   <source_model>adminhtml/system_config_source_yesno</source_model>
-                  <sort_order>11</sort_order>
+                  <sort_order>9</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>
@@ -112,7 +112,7 @@
                   <label>Form Message</label>
                   <config_path>payment/vtweb/form_message</config_path>
                   <frontend_type>textarea</frontend_type>
-                  <sort_order>23</sort_order>
+                  <sort_order>10</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>0</show_in_store>
@@ -122,7 +122,7 @@
                   <frontend_type>select</frontend_type>
                   <config_path>payment/vtweb/info_type</config_path>
                   <source_model>adminhtml/system_config_source_yesno</source_model>
-                  <sort_order>24</sort_order>
+                  <sort_order>11</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>0</show_in_store>
@@ -131,7 +131,7 @@
                   <label>Payment Applicable From</label>
                   <config_path>payment/vtweb/allowspecific</config_path>
                   <frontend_type>select</frontend_type>
-                  <sort_order>25</sort_order>
+                  <sort_order>12</sort_order>
                   <source_model>adminhtml/system_config_source_payment_allspecificcountries</source_model>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
@@ -141,7 +141,7 @@
                   <label>Countries Payment Applicable From</label>
                   <config_path>payment/vtweb/specificcountry</config_path>
                   <frontend_type>multiselect</frontend_type>
-                  <sort_order>26</sort_order>
+                  <sort_order>13</sort_order>
                   <source_model>adminhtml/system_config_source_country</source_model>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
@@ -154,27 +154,48 @@
                   <label>Sort Order</label>
                   <config_path>payment/vtweb/sort_order</config_path>
                   <frontend_type>text</frontend_type>
-                  <sort_order>27</sort_order>
+                  <sort_order>14</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>0</show_in_store>
                 </sort_order>
               </fields>
             </vtweb_general>
-            <vtweb_internet_banking type="group" translate="label">
-              <label>Internet Banking</label>
+            <vtweb_credit_card type="group" translate="label">
+              <label>Credit Card</label>
               <frontend_type>text</frontend_type>              
               <show_in_default>1</show_in_default>
               <show_in_website>1</show_in_website>
               <show_in_store>1</show_in_store>
               <sort_order>2</sort_order>
               <fields>
+                <enable_creditcard>
+                  <label>Enable Credit Card</label>
+                  <config_path>payment/vtweb/enable_creditcard</config_path>
+                  <frontend_type>select</frontend_type>
+                  <source_model>adminhtml/system_config_source_yesno</source_model>
+                  <sort_order>1</sort_order>
+                  <show_in_default>1</show_in_default>
+                  <show_in_website>1</show_in_website>
+                  <show_in_store>1</show_in_store>
+                  <comment>Please contact us if you wish to enable this feature in Production</comment>
+                </enable_creditcard>
+              </fields>
+            </vtweb_credit_card>
+            <vtweb_internet_banking type="group" translate="label">
+              <label>Internet Banking</label>
+              <frontend_type>text</frontend_type>              
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+              <sort_order>3</sort_order>
+              <fields>
                 <enable_mandiriclickpay>
                   <label>Enable Mandiri ClickPay</label>
                   <config_path>payment/vtweb/enable_mandiriclickpay</config_path>
                   <frontend_type>select</frontend_type>
                   <source_model>adminhtml/system_config_source_yesno</source_model>
-                  <sort_order>12</sort_order>
+                  <sort_order>1</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>
@@ -185,28 +206,39 @@
                   <config_path>payment/vtweb/enable_cimbclick</config_path>
                   <frontend_type>select</frontend_type>
                   <source_model>adminhtml/system_config_source_yesno</source_model>
-                  <sort_order>13</sort_order>
+                  <sort_order>2</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>
                   <comment>Please contact us if you wish to enable this feature in Production</comment>
                 </enable_cimbclick>
+                <enable_briepay>
+                  <label>Enable BRI epay</label>
+                  <config_path>payment/vtweb/enable_briepay</config_path>
+                  <frontend_type>select</frontend_type>
+                  <source_model>adminhtml/system_config_source_yesno</source_model>
+                  <sort_order>3</sort_order>
+                  <show_in_default>1</show_in_default>
+                  <show_in_website>1</show_in_website>
+                  <show_in_store>1</show_in_store>
+                  <comment>Please contact us if you wish to enable this feature in Production</comment>
+                </enable_briepay>
               </fields>
             </vtweb_internet_banking>
-			<vtweb_bank_transfer type="group" translate="label">
+			   <vtweb_bank_transfer type="group" translate="label">
               <label>Bank Transfer</label>
               <frontend_type>text</frontend_type>              
               <show_in_default>1</show_in_default>
               <show_in_website>1</show_in_website>
               <show_in_store>1</show_in_store>
-              <sort_order>1</sort_order>
+              <sort_order>4</sort_order>
               <fields>
                 <enable_permata_va>
                   <label>Enable Permata VA</label>
                   <config_path>payment/vtweb/enable_permatava</config_path>
                   <frontend_type>select</frontend_type>
                   <source_model>adminhtml/system_config_source_yesno</source_model>
-                  <sort_order>14</sort_order>
+                  <sort_order>1</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>
@@ -220,14 +252,14 @@
               <show_in_default>1</show_in_default>
               <show_in_website>1</show_in_website>
               <show_in_store>1</show_in_store>
-              <sort_order>3</sort_order>
+              <sort_order>5</sort_order>
               <fields>
                 <enable_installment>
                   <label>Enable Installment</label>
                   <config_path>payment/vtweb/enable_installment</config_path>
                   <frontend_type>select</frontend_type>
                   <source_model>vtweb/system_config_source_installment_options</source_model>
-                  <sort_order>15</sort_order>
+                  <sort_order>1</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>
@@ -288,7 +320,7 @@
                   <config_path>payment/vtweb/enable_installment_bni</config_path>
                   <frontend_type>select</frontend_type>
                   <source_model>adminhtml/system_config_source_yesno</source_model>
-                  <sort_order>16</sort_order>
+                  <sort_order>2</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>
@@ -327,7 +359,7 @@
                   <config_path>payment/vtweb/installment_bni_term</config_path>
                   <frontend_type>multiselect</frontend_type>
                   <source_model>vtweb/system_config_source_installment_bni_bnioptions</source_model>
-                  <sort_order>17</sort_order>
+                  <sort_order>3</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>
@@ -356,7 +388,7 @@
                   <config_path>payment/vtweb/enable_installment_mandiri</config_path>
                   <frontend_type>select</frontend_type>
                   <source_model>adminhtml/system_config_source_yesno</source_model>
-                  <sort_order>18</sort_order>
+                  <sort_order>4</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>
@@ -395,7 +427,7 @@
                   <config_path>payment/vtweb/installment_mandiri_term</config_path>
                   <frontend_type>multiselect</frontend_type>
                   <source_model>vtweb/system_config_source_installment_mandiri_mandirioptions</source_model>
-                  <sort_order>19</sort_order>
+                  <sort_order>5</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>

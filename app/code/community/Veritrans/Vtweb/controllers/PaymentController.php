@@ -182,7 +182,11 @@ class Veritrans_Vtweb_PaymentController
       unset($each);
     }
 
-    $list_enable_payments = array('credit_card');
+    $list_enable_payments = array();
+
+    if (Mage::getStoreConfig('payment/vtweb/enable_creditcard') == '1') {
+      $list_enable_payments[] = 'credit_card';
+    }
 
     if (Mage::getStoreConfig('payment/vtweb/enable_cimbclick') == '1') {
       $list_enable_payments[] = 'cimb_clicks';
@@ -192,6 +196,9 @@ class Veritrans_Vtweb_PaymentController
     }
     if (Mage::getStoreConfig('payment/vtweb/enable_permatava') == '1') {
       $list_enable_payments[] = 'bank_transfer';
+    }
+    if (Mage::getStoreConfig('payment/vtweb/enable_briepay') == '1') {
+      $list_enable_payments[] = 'bri_epay';
     }
 
     $payloads = array();
@@ -401,17 +408,21 @@ class Veritrans_Vtweb_PaymentController
       $logs .= 'deny ';
       $order->setStatus('canceled');
     }   
-	else if ($transaction == 'settlement') {
+	 else if ($transaction == 'settlement') {
      $logs .= 'settlement ';
      $order->setStatus('processing');
      $order->sendOrderUpdateEmail(true,
             'Thank you, your payment is successfully processed.');
     }
-	else if ($transaction == 'pending') {
+	 else if ($transaction == 'pending') {
      $logs .= 'pending ';
      $order->setStatus('Pending Payment');
      $order->sendOrderUpdateEmail(true,
             'Thank you, your payment is successfully processed.');
+    }
+    else if ($transaction == 'cancel') {
+     $logs .= 'canceled';
+     $order->setStatus('canceled');
     }
     else {
       $logs .= "*$transaction:$fraud ";

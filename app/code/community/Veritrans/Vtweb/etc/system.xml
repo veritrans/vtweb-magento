@@ -4,7 +4,7 @@
     <payment>
       <groups>
         <vtweb translate="label comment" module="vtweb">
-          <label>Veritrans</label>
+          <label>Veritrans ver 2.0.0</label>
           <frontend_type>text</frontend_type>
           <sort_order>1</sort_order>
           <show_in_default>1</show_in_default>

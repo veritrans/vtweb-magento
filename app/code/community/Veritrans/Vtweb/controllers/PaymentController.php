@@ -71,9 +71,8 @@ class Veritrans_Vtweb_PaymentController
     $billing_address['address']      = $order_billing_address->getStreet(1);
     $billing_address['city']         = $order_billing_address->getCity();
     $billing_address['postal_code']  = $order_billing_address->getPostcode();
-    $billing_address['country_code'] = $order_billing_address->getCountry();
-    $billing_address['phone']        =
-        $this->convert_country_code($order_billing_address->getTelephone());
+    $billing_address['country_code'] = $this->convert_country_code($order_billing_address->getCountry());
+    $billing_address['phone']        = $order_billing_address->getTelephone();
 
     $order_shipping_address = $order->getShippingAddress();
     $shipping_address = array();
@@ -205,8 +204,7 @@ class Veritrans_Vtweb_PaymentController
     $payloads['transaction_details'] = $transaction_details;
     $payloads['item_details']        = $item_details;
     $payloads['customer_details']    = $customer_details;
-    $payloads['vtweb']               = array('enabled_payments'
-                                             => $list_enable_payments);
+    $payloads['vtweb']               = array('enabled_payments'=> $list_enable_payments);
 
     $isWarning = false;
     $isInstallment = false;

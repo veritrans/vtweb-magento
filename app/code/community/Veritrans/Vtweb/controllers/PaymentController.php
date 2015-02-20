@@ -401,6 +401,9 @@ class Veritrans_Vtweb_PaymentController
         $logs .= 'accept ';
         $order->setStatus('canceled');
       }
+      else {
+        $order->setStatus('canceled');
+      }
     }
     else if ($transaction == 'deny') {
       $logs .= 'deny ';

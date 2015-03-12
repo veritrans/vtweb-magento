@@ -199,7 +199,13 @@ class Veritrans_Vtweb_PaymentController
     if (Mage::getStoreConfig('payment/vtweb/enable_briepay') == '1') {
       $list_enable_payments[] = 'bri_epay';
     }
-
+    if (Mage::getStoreConfig('payment/vtweb/enable_tcash') == '1') {
+      $list_enable_payments[] = 'telkomsel_cash';
+    }
+    if (Mage::getStoreConfig('payment/vtweb/enable_xltunai') == '1') {
+      $list_enable_payments[] = 'xl_tunai';
+    }
+   
     $payloads = array();
     $payloads['transaction_details'] = $transaction_details;
     $payloads['item_details']        = $item_details;

@@ -199,6 +199,13 @@ class Veritrans_Vtweb_PaymentController
     if (Mage::getStoreConfig('payment/vtweb/enable_briepay') == '1') {
       $list_enable_payments[] = 'bri_epay';
     }
+    if (Mage::getStoreConfig('payment/vtweb/enable_tcash') == '1') {
+      $list_enable_payments[] = 'telkomsel_cash';
+    }
+    if (Mage::getStoreConfig('payment/vtweb/enable_xltunai') == '1') {
+      $list_enable_payments[] = 'xl_tunai';
+    }
+    error_log(print_r($list_enable_payments, TRUE));
 
     $payloads = array();
     $payloads['transaction_details'] = $transaction_details;
@@ -400,6 +407,9 @@ class Veritrans_Vtweb_PaymentController
       else if ($fraud == 'accept') {
         $logs .= 'accept ';
         $order->setStatus('canceled');
+      }
+       else {
+       $order->setStatus('canceled');
       }
     }
     else if ($transaction == 'deny') {

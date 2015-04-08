@@ -358,6 +358,7 @@ class Veritrans_Vtweb_PaymentController
   // make sure that the payment is successed, if success send the item(s) to
   // customer :p
   public function notificationAction() {
+    header("HTTP/1.1 200 OK");
     error_log('payment notification');
 
     Veritrans_Config::$serverKey =

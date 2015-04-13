@@ -328,6 +328,8 @@ class Veritrans_Vtweb_PaymentController
     }
     catch (Exception $e) {
       error_log($e->getMessage());
+      Mage::log('error:'.print_r($e->getMessage(),true),null,'vtweb.log',true);
+      error_log($e->getMessage());
     }
   }
 

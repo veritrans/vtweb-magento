@@ -1,6 +1,8 @@
 Veritrans-PHP
 ===============
 
+[![Build Status](https://travis-ci.org/veritrans/veritrans-php.svg)](https://travis-ci.org/veritrans/veritrans-php)
+
 Veritrans :heart: PHP!
 
 This is the all new PHP client library for Veritrans 2.0. This is the official PHP wrapper for Veritrans Payment API. Visit [https://www.veritrans.co.id](https://www.veritrans.co.id) for more information about the product and see documentation at [http://docs.veritrans.co.id](http://docs.veritrans.co.id) for more technical details.
@@ -14,7 +16,7 @@ If you are using [Composer](https://getcomposer.org), add this require line to y
 ```json
 {
 	"require": {
-		"veritrans/veritrans-php": "master"
+		"veritrans/veritrans-php": "dev-master"
 	}
 }
 ```
@@ -87,12 +89,11 @@ catch (Exception $e) {
 
 ```php
 $notif = new Veritrans_Notification();
-if ($notif->isVerified()) {
-  $transaction = $notif->transaction_status;
-  $fraud = $notif->fraud_status;
 
-  error_log("Order ID $notif->order_id: " .
-      "transaction status = $transaction, fraud staus = $fraud");
+$transaction = $notif->transaction_status;
+$fraud = $notif->fraud_status;
+
+error_log("Order ID $notif->order_id: "."transaction status = $transaction, fraud staus = $fraud");
 
   if ($transaction == 'capture') {
     if ($fraud == 'challenge') {

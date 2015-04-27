@@ -40,14 +40,14 @@ class Veritrans_ApiRequestor {
         dirname(__FILE__) . "/../data/cacert.pem");
 
     $result = curl_exec($ch);
-    curl_close($ch);
+    // curl_close($ch);
 
     if ($result === FALSE) {
       throw new Exception('CURL Error: ' . curl_error($ch), curl_errno($ch));
     }
     else {
       $result_array = json_decode($result);
-      if (!in_array($result_array->status_code, array(200, 201, 202))) {
+      if (!in_array($result_array->status_code, array(200, 201, 202, 407))) {
         $message = 'Veritrans Error (' . $result_array->status_code . '): '
             . $result_array->status_message;
         throw new Exception($message, $result_array->status_code);

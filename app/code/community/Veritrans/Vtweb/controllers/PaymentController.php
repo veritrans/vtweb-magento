@@ -186,7 +186,6 @@ class Veritrans_Vtweb_PaymentController
     if (Mage::getStoreConfig('payment/vtweb/enable_creditcard') == '1') {
       $list_enable_payments[] = 'credit_card';
     }
-
     if (Mage::getStoreConfig('payment/vtweb/enable_cimbclick') == '1') {
       $list_enable_payments[] = 'cimb_clicks';
     }
@@ -206,7 +205,10 @@ class Veritrans_Vtweb_PaymentController
       $list_enable_payments[] = 'xl_tunai';
     }
     if (Mage::getStoreConfig('payment/vtweb/enable_mandiribill') == '1') {
-      $list_enable_payments[] = 'mandiri_bill';
+      $list_enable_payments[] = 'echannel';
+    }
+    if (Mage::getStoreConfig('payment/vtweb/enable_bbmmoney') == '1') {
+      $list_enable_payments[] = 'bbm_money';
     }
 
     $payloads = array();
@@ -329,7 +331,6 @@ class Veritrans_Vtweb_PaymentController
     catch (Exception $e) {
       error_log($e->getMessage());
       Mage::log('error:'.print_r($e->getMessage(),true),null,'vtweb.log',true);
-      error_log($e->getMessage());
     }
   }
 
@@ -338,14 +339,14 @@ class Veritrans_Vtweb_PaymentController
   // because success is valid when notification (security reason)
   public function responseAction() {
     //var_dump($_POST); use for debugging value.
-    if($this->getRequest()->isPost()) {
-      $orderId = $_POST['orderId']; // Generally sent by gateway
-      $status = $_POST['mStatus'];
-      if($status == 'success' && !is_null($orderId) && $orderId != '') {
+    if($_GET['order_id']) {
+      $orderId = $_GET['order_id']; // Generally sent by gateway
+      $status = $_GET['status_code'];
+      if($status == '200' && !is_null($orderId) && $orderId != '') {
         // Redirected by Veritrans, if ok
         Mage::getSingleton('checkout/session')->unsQuoteId();
         Mage_Core_Controller_Varien_Action::_redirect(
-            'checkout/onepage/success', array('_secure'=>true));
+            'checkout/onepage/success', array('_secure'=>false));
       }
       else {
         // There is a problem in the response we got
@@ -363,12 +364,10 @@ class Veritrans_Vtweb_PaymentController
   // make sure that the payment is successed, if success send the item(s) to
   // customer :p
   public function notificationAction() {
-    header("HTTP/1.1 200 OK");
-    error_log('payment notification');
 
-    Veritrans_Config::$serverKey =
-        Mage::getStoreConfig('payment/vtweb/server_key_v2');
+    Veritrans_Config::$serverKey = Mage::getStoreConfig('payment/vtweb/server_key_v2');
     $notif = new Veritrans_Notification();
+    Mage::log('get status result'.print_r($notif,true),null,'vtweb.log',true);
 
     $order = Mage::getModel('sales/order');
     $order->loadByIncrementId($notif->order_id);
@@ -376,75 +375,48 @@ class Veritrans_Vtweb_PaymentController
     $transaction = $notif->transaction_status;
     $fraud = $notif->fraud_status;
 
-    $logs = '';
-
     if ($transaction == 'capture') {
-      $logs .= 'capture ';
-      if ($fraud == 'challenge') {
-        $logs .= 'challenge ';
-        $order->setStatus('fraud');
-      }
-      else if ($fraud == 'accept') {
-        $logs .= 'accept ';
-        $invoice = $order->prepareInvoice()
-          ->setTransactionId($order->getId())
-          ->addComment('Payment successfully processed by Veritrans.')
-          ->register()
-          ->pay();
+        if ($fraud == 'challenge') {
+          $order->setStatus(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW);
+        }
+        else if ($fraud == 'accept') {
+          $invoice = $order->prepareInvoice()
+            ->setTransactionId($order->getId())
+            ->addComment('Payment successfully processed by Veritrans.')
+            ->register()
+            ->pay();
 
-        $transaction_save = Mage::getModel('core/resource_transaction')
-          ->addObject($invoice)
-          ->addObject($invoice->getOrder());
+          $transaction_save = Mage::getModel('core/resource_transaction')
+            ->addObject($invoice)
+            ->addObject($invoice->getOrder());
 
-        $transaction_save->save();
+          $transaction_save->save();
 
-        $order->setStatus('processing');
-        $order->sendOrderUpdateEmail(true,
-            'Thank you, your payment is successfully processed.');
-      }
+          $order->setStatus(Mage_Sales_Model_Order::STATE_PROCESSING);
+          $order->sendOrderUpdateEmail(true,
+              'Thank you, your payment is successfully processed.');
+        }
     }
-    else if ($transaction == 'cancel') {
-      $logs .= 'cancel ';
-      if ($fraud == 'challenge') {
-        $logs .= 'challenge ';
-        $order->setStatus('canceled');
-      }
-      else if ($fraud == 'accept') {
-        $logs .= 'accept ';
-        $order->setStatus('canceled');
-      }
-       else {
-       $order->setStatus('canceled');
-      }
-    }
-    else if ($transaction == 'deny') {
-      $logs .= 'deny ';
-      $order->setStatus('canceled');
+    else if ($transaction == 'cancel' || $transaction == 'deny' ) {
+       $order->setStatus(Mage_Sales_Model_Order::STATE_CANCELED);
     }   
    else if ($transaction == 'settlement') {
-     $logs .= 'settlement ';
-     $order->setStatus('processing');
+     $order->setStatus(Mage_Sales_Model_Order::STATE_PROCESSING);
      $order->sendOrderUpdateEmail(true,
             'Thank you, your payment is successfully processed.');
     }
    else if ($transaction == 'pending') {
-     $logs .= 'pending ';
-     $order->setStatus('Pending Payment');
+     $order->setStatus(Mage_Sales_Model_Order::STATE_PENDING_PAYMENT);
      $order->sendOrderUpdateEmail(true,
             'Thank you, your payment is successfully processed.');
     }
     else if ($transaction == 'cancel') {
-     $logs .= 'canceled';
-     $order->setStatus('canceled');
+     $order->setStatus(Mage_Sales_Model_Order::STATE_CANCELED);
     }
     else {
-      $logs .= "*$transaction:$fraud ";
-      $order->setStatus('fraud');
+      $order->setStatus(Mage_Sales_Model_Order::STATUS_FRAUD);
     }
-
     $order->save();
-
-    error_log($logs);
   }
 
   // The cancel action is triggered when an order is to be cancelled

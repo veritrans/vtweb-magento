@@ -1,0 +1,17 @@
+<?php
+/**
+ * Veritrans VT Web Model Standard
+ *
+ * @category   Mage
+ * @package    vtweb/form.phtml
+ * @author     Kisman Hong, plihplih.com
+ * this template is rendered when Veritrans payment method is chosen. This is description about Veritrans Payment Method
+ */
+?>
+<ul class="form-list" id="payment_form_<?php echo $this->getMethodCode() ?>" style="display:none;">
+    <li>	
+	[ Visa / Master Card ] <br/>
+    Payment will be redirected to Veritrans Payment Page.
+    </li>
+    <input id="token_id" name="payment[token_id]" type="hidden" value="asdf1234" />
+</ul>

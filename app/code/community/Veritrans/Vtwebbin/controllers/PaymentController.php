@@ -15,7 +15,7 @@
 
 require_once(Mage::getBaseDir('lib') . '/veritrans-php/Veritrans.php');
 
-class Veritrans_Vtweb_PaymentController
+class Veritrans_Vtwebbin_PaymentController
     extends Mage_Core_Controller_Front_Action {
 
   /**
@@ -40,11 +40,12 @@ class Veritrans_Vtweb_PaymentController
     $order->sendNewOrderEmail();
     $order->setEmailSent(true);
 
-    $api_version = Mage::getStoreConfig('payment/vtweb/api_version');
     $payment_type = Mage::getStoreConfig('payment/vtweb/payment_types');
     $enable_installment = Mage::getStoreConfig('payment/vtweb/enable_installment');
     $is_enabled_bni = Mage::getStoreConfig('payment/vtweb/enable_installment_bni');
     $is_enabled_mandiri = Mage::getStoreConfig('payment/vtweb/enable_installment_mandiri');
+    $bin_list = Mage::getStoreConfig('payment/vtwebbin/bin_number_list'); 
+
 
     Veritrans_Config::$isProduction =
         Mage::getStoreConfig('payment/vtweb/environment') == 'production'
@@ -181,41 +182,11 @@ class Veritrans_Vtweb_PaymentController
       unset($each);
     }
 
-    $list_enable_payments = array();
-
-    if (Mage::getStoreConfig('payment/vtweb/enable_creditcard') == '1') {
-      $list_enable_payments[] = 'credit_card';
-    }
-    if (Mage::getStoreConfig('payment/vtweb/enable_cimbclick') == '1') {
-      $list_enable_payments[] = 'cimb_clicks';
-    }
-    if (Mage::getStoreConfig('payment/vtweb/enable_mandiriclickpay') == '1') {
-      $list_enable_payments[] = 'mandiri_clickpay';
-    }
-    if (Mage::getStoreConfig('payment/vtweb/enable_permatava') == '1') {
-      $list_enable_payments[] = 'bank_transfer';
-    }
-    if (Mage::getStoreConfig('payment/vtweb/enable_briepay') == '1') {
-      $list_enable_payments[] = 'bri_epay';
-    }
-    if (Mage::getStoreConfig('payment/vtweb/enable_tcash') == '1') {
-      $list_enable_payments[] = 'telkomsel_cash';
-    }
-    if (Mage::getStoreConfig('payment/vtweb/enable_xltunai') == '1') {
-      $list_enable_payments[] = 'xl_tunai';
-    }
-    if (Mage::getStoreConfig('payment/vtweb/enable_mandiribill') == '1') {
-      $list_enable_payments[] = 'echannel';
-    }
-    if (Mage::getStoreConfig('payment/vtweb/enable_bbmmoney') == '1') {
-      $list_enable_payments[] = 'bbm_money';
-    }
-
     $payloads = array();
     $payloads['transaction_details'] = $transaction_details;
     $payloads['item_details']        = $item_details;
     $payloads['customer_details']    = $customer_details;
-    $payloads['vtweb']               = array('enabled_payments'=> $list_enable_payments);
+    $payloads['vtweb']               = array('enabled_payments'=> 'credit_card');
 
     $isWarning = false;
     $isInstallment = false;
@@ -225,6 +196,16 @@ class Veritrans_Vtweb_PaymentController
     foreach ($item_details as $item) {
       $totalPrice += $item['price'] * $item['quantity'];
     }
+
+    $bin_list = Mage::getStoreConfig('payment/vtwebbin/bin_number_list'); 
+    if($bin_list)
+    {
+      $bin_list_array = explode(',', $bin_list);
+      $payloads['vtweb']['credit_card_bins'] = $bin_list_array;  
+      
+      Mage::log('bin list = '.print_r($bin_list_array,true),null,'vtweb.log',true);
+    }
+
 
     if ($enable_installment == 'allProducts') {
       $installment_terms = array();
@@ -312,7 +293,7 @@ class Veritrans_Vtweb_PaymentController
         unset($each);
       }
     }
-
+  //Mage::log('payloads:'.print_r($payloads,true),null,'vtweb.log',true);
     try {
       $redirUrl = Veritrans_VtWeb::getRedirectionUrl($payloads);
       
@@ -331,104 +312,6 @@ class Veritrans_Vtweb_PaymentController
     catch (Exception $e) {
       error_log($e->getMessage());
       Mage::log('error:'.print_r($e->getMessage(),true),null,'vtweb.log',true);
-    }
-  }
-
-  // The response action is triggered when your gateway sends back a response
-  // after processing the customer's payment, we will not update to success
-  // because success is valid when notification (security reason)
-  public function responseAction() {
-    //var_dump($_POST); use for debugging value.
-    if($_GET['order_id']) {
-      $orderId = $_GET['order_id']; // Generally sent by gateway
-      $status = $_GET['status_code'];
-      if($status == '200' && !is_null($orderId) && $orderId != '') {
-        // Redirected by Veritrans, if ok
-        Mage::getSingleton('checkout/session')->unsQuoteId();
-        Mage_Core_Controller_Varien_Action::_redirect(
-            'checkout/onepage/success', array('_secure'=>false));
-      }
-      else {
-        // There is a problem in the response we got
-        $this->cancelAction();
-        Mage_Core_Controller_Varien_Action::_redirect(
-            'checkout/onepage/failure', array('_secure'=>true));
-      }
-    }
-    else{
-      Mage_Core_Controller_Varien_Action::_redirect('');
-    }
-  }
-
-  // Veritrans will send notification of the payment status, this is only way we
-  // make sure that the payment is successed, if success send the item(s) to
-  // customer :p
-  public function notificationAction() {
-
-    Veritrans_Config::$serverKey = Mage::getStoreConfig('payment/vtweb/server_key_v2');
-    $notif = new Veritrans_Notification();
-    Mage::log('get status result'.print_r($notif,true),null,'vtweb.log',true);
-
-    $order = Mage::getModel('sales/order');
-    $order->loadByIncrementId($notif->order_id);
-
-    $transaction = $notif->transaction_status;
-    $fraud = $notif->fraud_status;
-
-    if ($transaction == 'capture') {
-        if ($fraud == 'challenge') {
-          $order->setStatus(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW);
-        }
-        else if ($fraud == 'accept') {
-          $invoice = $order->prepareInvoice()
-            ->setTransactionId($order->getId())
-            ->addComment('Payment successfully processed by Veritrans.')
-            ->register()
-            ->pay();
-
-          $transaction_save = Mage::getModel('core/resource_transaction')
-            ->addObject($invoice)
-            ->addObject($invoice->getOrder());
-
-          $transaction_save->save();
-
-          $order->setStatus(Mage_Sales_Model_Order::STATE_PROCESSING);
-          $order->sendOrderUpdateEmail(true,
-              'Thank you, your payment is successfully processed.');
-        }
-    }
-    else if ($transaction == 'cancel' || $transaction == 'deny' ) {
-       $order->setStatus(Mage_Sales_Model_Order::STATE_CANCELED);
-    }   
-   else if ($transaction == 'settlement') {
-     $order->setStatus(Mage_Sales_Model_Order::STATE_PROCESSING);
-     $order->sendOrderUpdateEmail(true,
-            'Thank you, your payment is successfully processed.');
-    }
-   else if ($transaction == 'pending') {
-     $order->setStatus(Mage_Sales_Model_Order::STATE_PENDING_PAYMENT);
-     $order->sendOrderUpdateEmail(true,
-            'Thank you, your payment is successfully processed.');
-    }
-    else if ($transaction == 'cancel') {
-     $order->setStatus(Mage_Sales_Model_Order::STATE_CANCELED);
-    }
-    else {
-      $order->setStatus(Mage_Sales_Model_Order::STATUS_FRAUD);
-    }
-    $order->save();
-  }
-
-  // The cancel action is triggered when an order is to be cancelled
-  public function cancelAction() {
-    if (Mage::getSingleton('checkout/session')->getLastRealOrderId()) {
-        $order = Mage::getModel('sales/order')->loadByIncrementId(
-            Mage::getSingleton('checkout/session')->getLastRealOrderId());
-        if($order->getId()) {
-      // Flag the order as 'cancelled' and save it
-          $order->cancel()->setState(Mage_Sales_Model_Order::STATE_CANCELED,
-              true, 'Gateway has declined the payment.')->save();
-        }
     }
   }
 

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Veritrans_Vtwebbin>
+      <active>true</active>
+      <codePool>community</codePool>
+      <version>0.1.0</version>
+    </Veritrans_Vtwebbin>
+  </modules>
+</config>

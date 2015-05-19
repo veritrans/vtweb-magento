@@ -59,7 +59,7 @@ class Veritrans_Vtweb_PaymentController
 
     Veritrans_Config::$isSanitized =
         Mage::getStoreConfig('payment/vtweb/enable_sanitized') == '1'
-        ? true : false;
+        ? true : false; 
 
     $transaction_details = array();
     $transaction_details['order_id'] = $orderIncrementId;

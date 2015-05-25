@@ -365,6 +365,8 @@ class Veritrans_Vtweb_PaymentController
   // customer :p
   public function notificationAction() {
 
+    Veritrans_Config::$isProduction =
+        Mage::getStoreConfig('payment/vtweb/environment') == 'production' ? true : false;
     Veritrans_Config::$serverKey = Mage::getStoreConfig('payment/vtweb/server_key_v2');
     $notif = new Veritrans_Notification();
     Mage::log('get status result'.print_r($notif,true),null,'vtweb.log',true);

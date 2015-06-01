@@ -4,7 +4,7 @@
     <payment>
       <groups>
         <vtweb translate="label comment" module="vtweb">
-          <label>Veritrans ver 2.2.0</label>
+          <label>Veritrans ver 2.2.1</label>
           <frontend_type>text</frontend_type>
           <sort_order>1</sort_order>
           <show_in_default>1</show_in_default>
@@ -411,13 +411,13 @@
                 <installment_bni_term>
                   <label>Installment BNI Term</label>
                   <config_path>payment/vtweb/installment_bni_term</config_path>
-                  <frontend_type>multiselect</frontend_type>
-                  <source_model>vtweb/system_config_source_installment_bni_bnioptions</source_model>
+                  <frontend_type>text</frontend_type>
                   <sort_order>3</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>
                   <comment>
+                    please insert installment term, separate by ',' for multiple value
                     <![CDATA[
                       <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js"></script>
                       <script>
@@ -479,13 +479,13 @@
                 <installment_mandiri_term>
                   <label>Installment Mandiri Term</label>
                   <config_path>payment/vtweb/installment_mandiri_term</config_path>
-                  <frontend_type>multiselect</frontend_type>
-                  <source_model>vtweb/system_config_source_installment_mandiri_mandirioptions</source_model>
+                  <frontend_type>text</frontend_type>
                   <sort_order>5</sort_order>
                   <show_in_default>1</show_in_default>
                   <show_in_website>1</show_in_website>
                   <show_in_store>1</show_in_store>
                   <comment>
+                    please insert installment term, separate by ',' for multiple value
                     <![CDATA[
                       <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js"></script>
                       <script>

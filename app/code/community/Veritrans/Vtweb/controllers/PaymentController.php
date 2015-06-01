@@ -232,7 +232,7 @@ class Veritrans_Vtweb_PaymentController
       if ($is_enabled_bni == 1) {
         $bni_term = Mage::getStoreConfig('payment/vtweb/installment_bni_term');
         $bni_term_array = explode(',', $bni_term);
-        
+
         if (strlen($bni_term) != 0) {
           $isInstallment = true;
           $installment_terms['bni'] = $bni_term_array;
@@ -267,7 +267,7 @@ class Veritrans_Vtweb_PaymentController
         if (array_key_exists('attributes_info', $productOptions)) {
           foreach ($productOptions['attributes_info'] as $attribute) {
             if (in_array('Payment', $attribute)) {
-              $installment_value = explode(' ', $attribute['value']);
+              $installment_value = explode(',', $attribute['value']);
 
               if (strtolower($installment_value[0]) == 'installment') {
                 $installment_terms = array();
@@ -299,7 +299,7 @@ class Veritrans_Vtweb_PaymentController
           if (array_key_exists('attributes_info', $productOptions)) {
             foreach ($productOptions['attributes_info'] as $attribute) {
               if (in_array('Payment', $attribute)) {
-                $installment_value = explode(' ', $attribute['value']);
+                $installment_value = explode(',', $attribute['value']);
 
                 if (strtolower($installment_value[0]) == 'installment') {
                   $isWarning = true;
@@ -551,7 +551,7 @@ class Veritrans_Vtweb_PaymentController
       'IM' => 'IMN',
       'IL' => 'ISR',
       'IT' => 'ITA',
-      'CI' => '',
+      'CI' => 'CIV',
       'JM' => 'JAM',
       'JP' => 'JPN',
       'JE' => 'JEY',
@@ -645,7 +645,7 @@ class Veritrans_Vtweb_PaymentController
       'SO' => 'SOM',
       'ZA' => 'ZAF',
       'GS' => 'SGS',
-      'KR' => '',
+      'KR' => 'KOR',
       'SS' => 'SSD',
       'ES' => 'ESP',
       'LK' => 'LKA',

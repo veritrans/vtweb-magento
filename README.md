@@ -16,7 +16,7 @@ Payment Method Feature:
 #### Minimum Requirements
 
 * This plugin is tested with Magento version 1.9
-* PHP version 5.3 or greater
+* PHP version 5.4 or greater
 
 #### Manual Instalation
 

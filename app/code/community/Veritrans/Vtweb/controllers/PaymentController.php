@@ -210,6 +210,10 @@ class Veritrans_Vtweb_PaymentController
     if (Mage::getStoreConfig('payment/vtweb/enable_bbmmoney') == '1') {
       $list_enable_payments[] = 'bbm_money';
     }
+    if (Mage::getStoreConfig('payment/vtweb/enable_indomaret') == '1') {
+      $list_enable_payments[] = 'cstore';
+    }
+
 
     $payloads = array();
     $payloads['transaction_details'] = $transaction_details;

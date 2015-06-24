@@ -213,6 +213,9 @@ class Veritrans_Vtweb_PaymentController
     if (Mage::getStoreConfig('payment/vtweb/enable_indomaret') == '1') {
       $list_enable_payments[] = 'cstore';
     }
+    if (Mage::getStoreConfig('payment/vtweb/enable_dompetku') == '1') {
+      $list_enable_payments[] = 'indosat_dompetku';
+    }
 
 
     $payloads = array();

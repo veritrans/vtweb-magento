@@ -14,6 +14,7 @@ $direct_debit = $this->getDirectDebit();
 $emoney = $this->getEmoney();
 $cc =  $this->getCreditCard();
 $bank_trans = $this->getBankTransfer();
+$cstore = $this->getCstore();
 ?>
 
 <style>
@@ -28,7 +29,7 @@ $bank_trans = $this->getBankTransfer();
 {
     height:30px;
     width:50px;
-    margin:10px 0px;
+    margin:10px 3px;
     padding:0 0 0 4;
 }
 .float
@@ -80,16 +81,28 @@ $bank_trans = $this->getBankTransfer();
         </div>
         <?php } ?>
         
-        <?php if($direct_debit){?>
+        <?php if($emoney){?>
         <div class="border float-group"> 
             <?php
-            if($emoney){
             foreach($emoney as &$e)
             {?>
                 <div class="image float">
                     <img class="displayed" src="<?php echo $this->getSkinUrl('images/'.$e.'.png') ?>"/> 
                 </div>
-            <?php } }
+            <?php } 
+            ?>
+        </div>    
+        <?php } ?>
+
+        <?php if($cstore){?>
+        <div class="border float-group"> 
+            <?php
+            foreach($cstore as &$cs)
+            {?>
+                <div class="image float">
+                    <img class="displayed" src="<?php echo $this->getSkinUrl('images/'.$cs.'.png') ?>"/> 
+                </div>
+            <?php } 
             ?>
         </div>    
         <?php } ?>

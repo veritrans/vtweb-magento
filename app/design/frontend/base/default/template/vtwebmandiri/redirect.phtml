@@ -1,0 +1,33 @@
+<?php
+/**
+ * Veritrans VT Web Model Standard
+ *
+ * @category   Mage
+ * @package    vtweb/info.phtml
+ * @author     Kisman Hong, plihplih.com
+ * this template is used for redirecting to Veritrans Payment Page with the required parameters
+ */
+	// Retrieve order
+	$_order = new Mage_Sales_Model_Order();
+	$orderId = Mage::getSingleton('checkout/session')->getLastRealOrderId();
+?>
+<form name="veritransform" method="post" action="<?= $this->getData('redirect_url') ?>">
+	<input type="hidden" name="MERCHANT_ID" value="<?= $this->getData('merchant_id') ?>" />
+        <input type="hidden" name="ORDER_ID" value="<?= $orderId ?>" />
+        <input type="hidden" name="TOKEN_BROWSER" value="<?= $this->getData('token_browser') ?>" />
+	<div align="center">
+		<br/>
+		<img src="<?php echo $this->getSkinUrl('images/logo.gif')?>"/>
+		<br/><br/>
+		<div style="font-size:1.1em;font-family:Arial, Helvetica, sans-serif;">
+			Please be patient, redirecting to Veritrans. Don't refresh your page...
+		</div> <br/>
+		<img src="<?php echo $this->getSkinUrl('images/loading.gif')?>"/>				
+	</div>
+</form>
+<script type="text/javascript">
+     function redirect(){
+	document.veritransform.submit();
+     }
+     window.onload = redirect;
+</script>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Veritrans_Vtwebmandiri>
+            <active>true</active>
+            <codePool>community</codePool>
+            <dependes>
+            	<Mage_adminhtml />
+            </dependes>
+        </Veritrans_Vtwebmandiri>
+    </modules>
+</config>

@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<config>
+  <sections>
+    <payment>
+      <groups>
+        <vtwebbni translate="label comment" module="vtwebbni">
+          <label>Veritrans BNI installment</label>
+          <frontend_type>text</frontend_type>
+          <sort_order>1</sort_order>
+          <show_in_default>1</show_in_default>
+          <show_in_website>1</show_in_website>
+          <show_in_store>1</show_in_store>
+          <fields>
+                <active translate="label">
+                  <label>Enabled</label>
+                  <config_path>payment/vtwebbni/active</config_path>
+                  <frontend_type>select</frontend_type>
+                  <source_model>adminhtml/system_config_source_yesno</source_model>
+                  <sort_order>1</sort_order>
+                  <show_in_default>1</show_in_default>
+                  <show_in_website>1</show_in_website>
+                  <show_in_store>0</show_in_store>
+                </active>                
+                <title translate="label">
+                  <label>Title</label>
+                  <config_path>payment/vtwebbni/title</config_path>
+                  <frontend_type>text</frontend_type>
+                  <sort_order>2</sort_order>
+                  <show_in_default>1</show_in_default>
+                  <show_in_website>1</show_in_website>
+                  <show_in_store>1</show_in_store>
+                </title>                        
+                <sort_order>
+                  <label>Sort Order</label>
+                  <config_path>payment/vtwebbni/sort_order</config_path>
+                  <frontend_type>text</frontend_type>
+                  <sort_order>3</sort_order>
+                  <show_in_default>1</show_in_default>
+                  <show_in_website>1</show_in_website>
+                  <show_in_store>0</show_in_store>
+                </sort_order>
+                <treshold translate="label">
+                  <label>Transaction Threshold</label>
+                  <config_path>payment/vtwebbni/threshold</config_path>
+                  <frontend_type>text</frontend_type>
+                  <sort_order>4</sort_order>
+                  <show_in_default>1</show_in_default>
+                  <show_in_website>1</show_in_website>
+                  <show_in_store>1</show_in_store>
+                  <comment>Minimum amount to use installment feature</comment>
+                </treshold>
+                <enable_installment>
+                  <label>Enable Installment</label>
+                  <config_path>payment/vtwebbni/enable_installment</config_path>
+                  <frontend_type>select</frontend_type>
+                  <source_model>vtwebbni/system_config_source_installment_options</source_model>
+                  <sort_order>5</sort_order>
+                  <show_in_default>1</show_in_default>
+                  <show_in_website>1</show_in_website>
+                  <show_in_store>1</show_in_store>
+                  <comment>
+                    Please contact us if you wish to enable this feature in Production
+                    <![CDATA[
+                      <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js"></script>
+                      <script>
+                        Event.observe(window, 'load', function() {
+                          var installmentOptions = document.getElementById('payment_vtwebbni_enable_installment').value;
+                          
+                          if (installmentOptions == 'certainProducts') {
+                            document.getElementById("row_payment_vtwebbni_installment_bni_term").style.display = '';
+                            document.getElementById('row_payment_vtwebbni_installment_bni_term').style.display = 'none';
+                          }
+                          else {
+                            document.getElementById("row_payment_vtwebbni_installment_bni_term").style.display = '';
+                          }
+                        });
+                        Event.observe('payment_vtwebbni_enable_installment', 'change', function() {
+                          var installmentOptions = document.getElementById('payment_vtwebbni_enable_installment').value;
+                          
+                          if (installmentOptions == 'certainProducts') {
+                            document.getElementById("row_payment_vtwebbni_installment_bni_term").style.display = '';
+                            document.getElementById('row_payment_vtwebbni_installment_bni_term').style.display = 'none';
+                          }
+                          else {
+                            document.getElementById("row_payment_vtwebbni_installment_bni_term").style.display = '';
+                          }
+                        });
+                      </script>
+                    ]]>
+                  </comment>
+                </enable_installment>
+                <installment_bni_term>
+                  <label>Installment BNI Term</label>
+                  <config_path>payment/vtwebbni/installment_bni_term</config_path>
+                  <frontend_type>text</frontend_type>
+                  <sort_order>6</sort_order>
+                  <show_in_default>1</show_in_default>
+                  <show_in_website>1</show_in_website>
+                  <show_in_store>1</show_in_store>
+                  <comment>
+                    please insert installment term, separate by ',' for multiple value
+                  </comment>
+                </installment_bni_term>
+                <bin_number_list>
+                  <label>Bin Number(s)</label>
+                  <config_path>payment/vtwebbni/bin_number_list</config_path>
+                  <frontend_type>textarea</frontend_type>
+                  <sort_order>7</sort_order>
+                  <show_in_default>1</show_in_default>
+                  <show_in_website>1</show_in_website>
+                  <show_in_store>1</show_in_store>
+                  <comment>Please insert up to 8 digit of bin filter. To filter multiple bin, please u coma (,). E.g 48111111,3111,5</comment>
+                </bin_number_list>
+          </fields>
+        </vtwebbni>
+      </groups>
+    </payment>
+  </sections>
+</config>

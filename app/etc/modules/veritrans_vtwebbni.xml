@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Veritrans_Vtwebbni>
+            <active>true</active>
+            <codePool>community</codePool>
+            <dependes>
+            	<Mage_adminhtml />
+            </dependes>
+        </Veritrans_Vtwebbni>
+    </modules>
+</config>

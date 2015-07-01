@@ -332,7 +332,7 @@
                 </enable_indomaret>
               </fields>
             </vtweb_convenient_store>
-            <vtweb_installment type="group" translate="label">
+<!--            <vtweb_installment type="group" translate="label">
               <label>Installment</label>
               <frontend_type>text</frontend_type>              
               <show_in_default>1</show_in_default>
@@ -538,7 +538,7 @@
                   </comment>
                 </installment_mandiri_term>
               </fields>
-            </vtweb_installment>    
+            </vtweb_installment> -->   
           </fields>
         </vtweb>
       </groups>

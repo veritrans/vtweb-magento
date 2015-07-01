@@ -1,0 +1,110 @@
+<?php
+/**
+ * Veritrans VT Web Model Standard
+ *
+ * @category   Mage
+ * @package    vtweb/form.phtml
+ * @author     Kisman Hong, plihplih.com
+ * this template is rendered when Veritrans payment method is chosen. This is description about Veritrans Payment Method
+ */
+?>
+<?php
+$enable_payment = $this->getEnablePayment();
+$direct_debit = $this->getDirectDebit();
+$emoney = $this->getEmoney();
+$cc =  $this->getCreditCard();
+$bank_trans = $this->getBankTransfer();
+$cstore = $this->getCstore();
+?>
+
+<style>
+.border
+{
+    border-style:solid; 
+    border-width:1px; 
+    border-color:#cccccc; 
+    height: 38px;
+}
+.image
+{
+    height:30px;
+    width:50px;
+    margin:10px 3px;
+    padding:0 0 0 4;
+}
+.float
+{
+    float:left;
+}
+.float-group
+{
+    float:left;
+    margin:10px 8px 0 0;
+
+}
+.displayed
+{
+    display: block;
+    margin: auto;
+}
+</style>
+<ul class="form-list" id="payment_form_<?php echo $this->getMethodCode() ?>" style="display:none;">
+    <li>	
+        <div style="padding:5px ">
+            <img src="<?php echo $this->getSkinUrl('images/we use veritrans.png') ?>"/> 
+        </div>
+        
+        <?php if($cc)
+        {?>
+        <div class="float-group">
+            <img src="<?php echo $this->getSkinUrl('images/'.$cc.'.png') ?>"/> 
+        </div>
+        <?php } ?>
+
+        <?php if($bank_trans)
+        {?>
+        <div class="float-group">
+        <img src="<?php echo $this->getSkinUrl('images/bank_transfer.png') ?>"/> 
+        </div>
+        <?php } ?>
+    
+         
+        <?php if($direct_debit){?>
+        <div class="border float-group">
+            <?php        
+            foreach($direct_debit as $d)
+            {?>
+                <div class="image float">
+                    <img class="displayed" src="<?php echo $this->getSkinUrl('images/'.$d.'.png') ?>"/> 
+                </div>
+            <?php } ?>
+        </div>
+        <?php } ?>
+        
+        <?php if($emoney){?>
+        <div class="border float-group"> 
+            <?php
+            foreach($emoney as &$e)
+            {?>
+                <div class="image float">
+                    <img class="displayed" src="<?php echo $this->getSkinUrl('images/'.$e.'.png') ?>"/> 
+                </div>
+            <?php } 
+            ?>
+        </div>    
+        <?php } ?>
+
+        <?php if($cstore){?>
+        <div class="border float-group"> 
+            <?php
+            foreach($cstore as &$cs)
+            {?>
+                <div class="image float">
+                    <img class="displayed" src="<?php echo $this->getSkinUrl('images/'.$cs.'.png') ?>"/> 
+                </div>
+            <?php } 
+            ?>
+        </div>   
+        <?php } ?>
+    </li><br> 
+</ul>

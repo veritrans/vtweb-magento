@@ -383,6 +383,7 @@ class Veritrans_Vtweb_PaymentController
 
     $transaction = $notif->transaction_status;
     $fraud = $notif->fraud_status;
+    $payment_type = $notif->payment_type;
 
     if ($transaction == 'capture') {
         if ($fraud == 'challenge') {
@@ -410,9 +411,9 @@ class Veritrans_Vtweb_PaymentController
        $order->setStatus(Mage_Sales_Model_Order::STATE_CANCELED);
     }   
    else if ($transaction == 'settlement') {
-     $order->setStatus(Mage_Sales_Model_Order::STATE_PROCESSING);
-     $order->sendOrderUpdateEmail(true,
-            'Thank you, your payment is successfully processed.');
+      if($payment_type != 'credit_card'){
+        $order->setStatus(Mage_Sales_Model_Order::STATE_PROCESSING);
+      }
     }
    else if ($transaction == 'pending') {
      $order->setStatus(Mage_Sales_Model_Order::STATE_PENDING_PAYMENT);

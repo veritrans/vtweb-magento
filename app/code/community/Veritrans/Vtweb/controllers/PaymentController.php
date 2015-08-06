@@ -411,8 +411,24 @@ class Veritrans_Vtweb_PaymentController
        $order->setStatus(Mage_Sales_Model_Order::STATE_CANCELED);
     }   
    else if ($transaction == 'settlement') {
+      
       if($payment_type != 'credit_card'){
-        $order->setStatus(Mage_Sales_Model_Order::STATE_PROCESSING);
+
+        $invoice = $order->prepareInvoice()
+            ->setTransactionId($order->getId())
+            ->addComment('Payment successfully processed by Veritrans.')
+            ->register()
+            ->pay();
+
+          $transaction_save = Mage::getModel('core/resource_transaction')
+            ->addObject($invoice)
+            ->addObject($invoice->getOrder());
+
+          $transaction_save->save();
+
+          $order->setStatus(Mage_Sales_Model_Order::STATE_PROCESSING);
+          $order->sendOrderUpdateEmail(true,
+              'Thank you, your payment is successfully processed.');
       }
     }
    else if ($transaction == 'pending') {

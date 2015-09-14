@@ -47,9 +47,7 @@ class Veritrans_Vtwebbni_PaymentController
     Veritrans_Config::$serverKey =
         Mage::getStoreConfig('payment/vtweb/server_key_v2');
     
-    Veritrans_Config::$is3ds =
-        Mage::getStoreConfig('payment/vtweb/enable_3d_secure') == '1'
-        ? true : false;
+    Veritrans_Config::$is3ds = false;
 
     Veritrans_Config::$isSanitized =
         Mage::getStoreConfig('payment/vtweb/enable_sanitized') == '1'

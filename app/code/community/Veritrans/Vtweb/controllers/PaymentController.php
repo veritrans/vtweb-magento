@@ -349,7 +349,7 @@ class Veritrans_Vtweb_PaymentController
     if($_GET['order_id']) {
       $orderId = $_GET['order_id']; // Generally sent by gateway
       $status = $_GET['status_code'];
-      if($status == '200' && !is_null($orderId) && $orderId != '') {
+      if($status == '200' || $status == '201' && !is_null($orderId) && $orderId != '') {
         // Redirected by Veritrans, if ok
         Mage::getSingleton('checkout/session')->unsQuoteId();
         Mage_Core_Controller_Varien_Action::_redirect(

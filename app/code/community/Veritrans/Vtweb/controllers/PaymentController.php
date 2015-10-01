@@ -216,6 +216,11 @@ class Veritrans_Vtweb_PaymentController
     if (Mage::getStoreConfig('payment/vtweb/enable_dompetku') == '1') {
       $list_enable_payments[] = 'indosat_dompetku';
     }
+    if (Mage::getStoreConfig('payment/vtweb/enable_mecash') == '1') {
+      $list_enable_payments[] = 'mandiri_ecash';
+    }
+
+    
 
 
     $payloads = array();
@@ -322,7 +327,7 @@ class Veritrans_Vtweb_PaymentController
 
     try {
       $redirUrl = Veritrans_VtWeb::getRedirectionUrl($payloads);
-      
+      //Mage::log('debug:'.print_r($payloads,true),null,'vtweb.log',true);
       if ($isWarning) {
         $this->_getCheckout()->setMsg($redirUrl);        
         $this->_redirectUrl(Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK) . 'vtweb/paymentwarning/warning/message/1');

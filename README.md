@@ -41,5 +41,5 @@ Payment Method Feature:
 * [Veritrans sandbox registration](https://my.sandbox.veritrans.co.id/register)
 * [Veritrans registration](https://my.veritrans.co.id/register)
 * [Veritrans documentation](http://docs.veritrans.co.id)
-* [Veritrans magrnto Documentation](http://docs.veritrans.co.id/vtweb/integration_magento.html)
+* [Veritrans magento Documentation](http://docs.veritrans.co.id/vtweb/integration_magento.html)
 * Technical support [support@veritrans.co.id](mailto:support@veritrans.co.id)

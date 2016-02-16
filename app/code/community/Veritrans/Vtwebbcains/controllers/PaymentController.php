@@ -189,7 +189,6 @@ class Veritrans_Vtwebbcains_PaymentController
     $payloads['vtweb']               = array('enabled_payments'=> 'credit_card');
 
     $isWarning = false;
-    $isInstallment = false;
     
     $totalPrice = 0;
     $threshold = Mage::getStoreConfig('payment/vtwebbcains/threshold'); //debugan
@@ -200,7 +199,7 @@ class Veritrans_Vtwebbcains_PaymentController
     }   
 
     $bin_list = Mage::getStoreConfig('payment/vtwebbcains/bin_number_list'); 
-    if($bin_list)
+    if($bin_list && ($totalPrice > $threshold))
     {
       $bin_list_array = explode(',', $bin_list);
       $payloads['vtweb']['credit_card_bins'] = $bin_list_array;  
@@ -211,10 +210,9 @@ class Veritrans_Vtwebbcains_PaymentController
     $payloads['vtweb']['credit_card']['channel'] = "migs";
 
     $installment_terms = array();
-    $mandiri_term = Mage::getStoreConfig('payment/vtwebbcains/installment_bca_term');
-    $mandiri_term_array = explode(',', $mandiri_term);
-    $installment_terms['mandiri'] = $mandiri_term_array;
-    $installment_terms['bca'] = $mandiri_term_array;
+    $bca_term = Mage::getStoreConfig('payment/vtwebbcains/installment_bca_term');
+    $bca_term_array = explode(',', $bca_term);
+    $installment_terms['bca'] = $bca_term_array;
     $payment_options = array(
         'installment' => array(
           'required' => false,
@@ -222,8 +220,11 @@ class Veritrans_Vtwebbcains_PaymentController
         )
       );
 
-    $payloads['vtweb']['payment_options'] = $payment_options;
-     
+    if ($totalPrice > $threshold)
+    {
+      $payloads['vtweb']['payment_options'] = $payment_options;
+    }    
+    
     Mage::log('content'.print_r($payloads,true),null,'vtwebbca.log',true);
     Mage::log(json_encode($payloads),null,'vtwebbca.log',true);
 
@@ -234,7 +235,7 @@ class Veritrans_Vtwebbcains_PaymentController
         $this->_getCheckout()->setMsg($redirUrl);        
         $this->_redirectUrl(Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK) . 'vtwebmandiri/paymentwarning/warning/message/1');
       }
-      else if (($totalPrice < $threshold ) && ($isInstallment)) {
+      else if (($totalPrice < $threshold)) {
         $this->_getCheckout()->setMsg($redirUrl);        
         $this->_redirectUrl(Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK) . 'vtwebmandiri/paymentwarning/warning/message/2');
       }

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <sections>
+    <payment>
+      <groups>
+        <vtwebio translate="label comment" module="vtwebio">
+          <label>Veritrans Offline Installments</label>
+          <frontend_type>text</frontend_type>
+          <sort_order>1</sort_order>
+          <show_in_default>1</show_in_default>
+          <show_in_website>1</show_in_website>
+          <show_in_store>1</show_in_store>
+          <fields>
+            <active translate="label">
+              <label>Enabled</label>
+              <config_path>payment/vtwebio/active</config_path>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_yesno</source_model>
+              <sort_order>1</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+            </active>
+            <title translate="label">
+              <label>Title</label>
+              <config_path>payment/vtwebio/title</config_path>
+              <frontend_type>text</frontend_type>
+              <sort_order>2</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </title>
+            <sort_order translate="label">
+              <label>Sort Order</label>
+              <config_path>payment/vtwebio/sort_order</config_path>
+              <frontend_type>text</frontend_type>
+              <sort_order>3</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+            </sort_order>
+            <threshold translate="label">
+              <label>Transaction Threshold</label>
+              <config_path>payment/vtwebio/threshold</config_path>
+              <frontend_type>text</frontend_type>
+              <sort_order>4</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+              <comment>Minimum amount to use installment feature</comment>
+            </threshold>
+            <!-- <enable_installment>
+              <label>Enable Installment</label>
+              <config_path>payment/vtwebio/enable_installment</config_path>
+              <frontend_type>select</frontend_type>
+              <source_model>vtwebio/system_config_source_installment_options</source_model>
+              <sort_order>5</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+              <comment>Please contact us if you wish to enable this feature in Production
+                   <![CDATA[
+                   payment_vtwebio_enable_installment
+                      <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js"></script>
+                      <script>
+                        Event.observe(window, 'load', function() {
+                            var installmentOptions = document.getElementById('payment_vtwebio_enable_installment').value;
+                            if (installmentOptions == 'certainProducts') {
+                              document.getElementById("row_payment_vtwebio_installment_term").style.display = '';
+                              document.getElementById('row_payment_vtwebio_installment_term').style.display = 'none';
+                            }
+                            else {
+                              document.getElementById("row_payment_vtwebio_installment_term").style.display = '';
+                            }
+                          });
+                        Event.observe('payment_vtwebio_enable_installment', 'change', function() {
+                            var installmentOptions = document.getElementById('payment_vtwebio_enable_installment').value;
+                            if (installmentOptions == 'certainProducts') {
+                              document.getElementById("row_payment_vtwebio_installment_term").style.display = '';
+                              document.getElementById('row_payment_vtwebio_installment_term').style.display = 'none';
+                            }
+                            else {
+                              document.getElementById("row_payment_vtwebio_installment_term").style.display = '';
+                            }
+                        });
+                      </script>]]></comment>
+            </enable_installment> -->
+            <installment_term>
+              <label>Installment Term</label>
+              <config_path>payment/vtwebio/installment_term</config_path>
+              <frontend_type>text</frontend_type>
+              <sort_order>7</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+              <comment>please insert installment term, separate by ',' for multiple value</comment>
+            </installment_term>
+            <bin_number_list>
+              <label>Bin Number(s)</label>
+              <config_path>payment/vtwebio/bin_number_list</config_path>
+              <frontend_type>textarea</frontend_type>
+              <sort_order>8</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+              <comment>Please insert up to 8 digit of bin filter. To filter multiple bin, please u coma (,). E.g 48111111,3111,5</comment>
+            </bin_number_list>
+          </fields>
+        </vtwebio>
+      </groups>
+    </payment>
+  </sections>
+</config>

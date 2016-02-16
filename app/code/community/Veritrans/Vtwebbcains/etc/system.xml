@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<config>
+  <sections>
+    <payment>
+      <groups>
+        <vtwebbcains translate="label comment" module="vtwebbcains">
+          <label>Veritrans BCA Installment</label>
+          <frontend_type>text</frontend_type>
+          <sort_order>1</sort_order>
+          <show_in_default>1</show_in_default>
+          <show_in_website>1</show_in_website>
+          <show_in_store>1</show_in_store>
+          <fields>
+                <active translate="label">
+                  <label>Enabled</label>
+                  <config_path>payment/vtwebbcains/active</config_path>
+                  <frontend_type>select</frontend_type>
+                  <source_model>adminhtml/system_config_source_yesno</source_model>
+                  <sort_order>1</sort_order>
+                  <show_in_default>1</show_in_default>
+                  <show_in_website>1</show_in_website>
+                  <show_in_store>0</show_in_store>
+                </active>                
+                <title translate="label">
+                  <label>Title</label>
+                  <config_path>payment/vtwebbcains/title</config_path>
+                  <frontend_type>text</frontend_type>
+                  <sort_order>2</sort_order>
+                  <show_in_default>1</show_in_default>
+                  <show_in_website>1</show_in_website>
+                  <show_in_store>1</show_in_store>
+                </title>
+                <environment>
+                  <label>Environment</label>
+                  <config_path>payment/vtwebbcains/environment</config_path>
+                  <frontend_type>select</frontend_type>
+                  <source_model>vtwebbcains/system_config_source_api_environment</source_model>
+                  <sort_order>3</sort_order>
+                  <show_in_default>1</show_in_default>
+                  <show_in_website>1</show_in_website>
+                  <show_in_store>1</show_in_store>
+                  <comment>Change to 'Production' once your store is going live</comment>
+                </environment>
+                <server_key translate="label">
+                  <label>Server key</label>
+                  <config_path>payment/vtwebbcains/server_key</config_path>
+                  <frontend_type>text</frontend_type>
+                  <sort_order>4</sort_order>
+                  <show_in_default>1</show_in_default>
+                  <show_in_website>1</show_in_website>
+                  <show_in_store>1</show_in_store>
+                </server_key>
+                <sort_order translate="label">
+                  <label>Sort Order</label>
+                  <config_path>payment/vtwebbcains/sort_order</config_path>
+                  <frontend_type>text</frontend_type>
+                  <sort_order>3</sort_order>
+                  <show_in_default>1</show_in_default>
+                  <show_in_website>1</show_in_website>
+                  <show_in_store>0</show_in_store>
+                </sort_order>
+                <threshold translate="label">
+                  <label>Transaction Threshold</label>
+                  <config_path>payment/vtwebbcains/threshold</config_path>
+                  <frontend_type>text</frontend_type>
+                  <sort_order>4</sort_order>
+                  <show_in_default>1</show_in_default>
+                  <show_in_website>1</show_in_website>
+                  <show_in_store>1</show_in_store>
+                  <comment>
+                    Minimum amount to use installment feature
+                  </comment>
+                </threshold>
+
+                <installment_bca_term>
+                  <label>Installment BCA Term</label>
+                  <config_path>payment/vtwebbcains/installment_bca_term</config_path>
+                  <frontend_type>text</frontend_type>
+                  <sort_order>7</sort_order>
+                  <show_in_default>1</show_in_default>
+                  <show_in_website>1</show_in_website>
+                  <show_in_store>1</show_in_store>
+                  <comment>
+                    please insert installment term, separate by ',' for multiple value
+                  </comment>
+                </installment_bca_term>
+                <bin_number_list>
+                  <label>Bin Number(s)</label>
+                  <config_path>payment/vtwebbcains/bin_number_list</config_path>
+                  <frontend_type>textarea</frontend_type>
+                  <sort_order>7</sort_order>
+                  <show_in_default>1</show_in_default>
+                  <show_in_website>1</show_in_website>
+                  <show_in_store>1</show_in_store>
+                  <comment>Please insert up to 8 digit of bin filter. To filter multiple bin, please u coma (,). E.g 48111111,3111,5</comment>
+                </bin_number_list>
+          </fields>
+        </vtwebbcains>
+      </groups>
+    </payment>
+  </sections>
+</config>

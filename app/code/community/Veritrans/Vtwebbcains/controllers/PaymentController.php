@@ -197,9 +197,10 @@ class Veritrans_Vtwebbcains_PaymentController
     foreach ($item_details as $item) {
       $totalPrice += $item['price'] * $item['quantity'];
     }   
+    
+    $bin_list = Mage::getStoreConfig('payment/vtwebbcains/bin_number_list');
 
-    $bin_list = Mage::getStoreConfig('payment/vtwebbcains/bin_number_list'); 
-    if($bin_list && ($totalPrice > $threshold))
+    if($bin_list)
     {
       $bin_list_array = explode(',', $bin_list);
       $payloads['vtweb']['credit_card_bins'] = $bin_list_array;  
@@ -215,7 +216,7 @@ class Veritrans_Vtwebbcains_PaymentController
     $installment_terms['bca'] = $bca_term_array;
     $payment_options = array(
         'installment' => array(
-          'required' => false,
+          'required' => true,
           'installment_terms' => $installment_terms
         )
       );
@@ -233,11 +234,11 @@ class Veritrans_Vtwebbcains_PaymentController
       
       if ($isWarning) {
         $this->_getCheckout()->setMsg($redirUrl);        
-        $this->_redirectUrl(Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK) . 'vtwebmandiri/paymentwarning/warning/message/1');
+        $this->_redirectUrl(Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK) . 'vtwebbcains/paymentwarning/warning/message/1');
       }
       else if (($totalPrice < $threshold)) {
         $this->_getCheckout()->setMsg($redirUrl);        
-        $this->_redirectUrl(Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK) . 'vtwebmandiri/paymentwarning/warning/message/2');
+        $this->_redirectUrl(Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK) . 'vtwebbcains/paymentwarning/warning/message/2');
       }
       else {
         $this->_redirectUrl($redirUrl);
@@ -245,7 +246,7 @@ class Veritrans_Vtwebbcains_PaymentController
     }
     catch (Exception $e) {
       error_log($e->getMessage());
-      Mage::log('error:'.print_r($e->getMessage(),true),null,'vtwebmandiri.log',true);
+      Mage::log('error:'.print_r($e->getMessage(),true),null,'vtwebbcains.log',true);
     }
   }
 

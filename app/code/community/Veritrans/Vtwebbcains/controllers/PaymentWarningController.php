@@ -1,6 +1,8 @@
 <?php
   class Veritrans_Vtwebbcains_PaymentWarningController extends Mage_Core_Controller_Front_Action {
     public function warningAction() {
+
+      $amount =  Mage::getStoreConfig('payment/vtwebbcains/threshold');
       $data = Mage::getSingleton('checkout/session')->getMsg();
       Mage::getSingleton('checkout/session')->setMsg('#');
       
@@ -13,7 +15,7 @@
       }
       else {
         Mage::getSingleton('core/session')->addWarning('Sorry, we are unable to proceed your transaction with installment.<br>
-          Transaction with installment is only allowed for transaction amount above Rp 500.000.<br><br>
+          Transaction with installment is only allowed for transaction amount above Rp'.$amount.' .<br><br>
           <a href="' . $data .'">Click here to continue with full payment</a>');
       }
 
